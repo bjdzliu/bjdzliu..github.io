@@ -16,6 +16,7 @@ branches:
 script:
   - hexo clean
   - hexo generate # generate static files
+  - echo "buld in"
 
 after_script:
   - git clone https://${GH_REF} .deploy_git  # GH_REF是最下面配置的仓库地址
