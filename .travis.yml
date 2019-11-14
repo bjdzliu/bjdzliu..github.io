@@ -8,14 +8,14 @@ before_install:
     - export TZ='Asia/Shanghai'
 
 install:
-  - npm install  #安装hexo及插件
+  - npm install -g hexo-cli #安装hexo及插件
 
 branches:
   only:
     - hexo # build master branch only
 script:
   - hexo clean
-  - hexo generate # generate static files
+  - hexo generate && gulp # generate static files
   - echo "buld in"
 
 after_script:
