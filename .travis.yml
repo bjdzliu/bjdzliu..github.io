@@ -1,7 +1,7 @@
-sudo: false
+#sudo: false
 language: node_js
-node_js:
-  - 10 # use nodejs v10 LTS
+node_js: stable
+ # - 10 # use nodejs v10 LTS
 cache: npm
 
 before_install:
@@ -15,7 +15,7 @@ branches:
     - hexo # build master branch only
 script:
   - hexo clean
-  - hexo generate  # generate static files
+  - hexo generate && gulp # generate static files
   - npm install hexo-generator-archive --save
 
 after_script:
