@@ -15,8 +15,8 @@ branches:
     - hexo # build master branch only
 script:
   - hexo clean
-  - hexo generate && gulp # generate static files
-  - echo "buld in"
+  - hexo generate  # generate static files
+  - cat ./public/index.html
 
 after_script:
   - git clone https://${GH_REF} .deploy_git  # GH_REF是最下面配置的仓库地址
