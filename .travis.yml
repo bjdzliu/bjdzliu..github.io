@@ -18,17 +18,17 @@ install:
 
 branches:
   only:
-    - hexo # build master branch only
+    - hexo # hexo分支保存hexo的源码；新建md在这个分支里；生成的static，在public目录，然后放到master分支
 script:
-#  - hexo clean
-  - hexo generate  # generate static files
-  - cat public/index.html|wc -l
+  - hexo clean
+  - hexo g  #  生成public目录,里面包含新的文件，比如：./public/2019/11/13/page4；
+  
 after_script:
-  - git clone https://${GH_REF} .deploy_git  # GH_REF是最下面配置的仓库地址
+  - git clone https://${GH_REF} .deploy_git  # 获得静态master分支
   - cd .deploy_git
-  - git checkout master
+  - git checkout master  #里面网站的静态文件，来自master分支
   - cd ../
-  - mv .deploy_git/.git/ ./public/   # 这一步之前的操作是为了保留master分支的提交记录，不然每次git init的话只有1条commit
+  - mv .deploy_git/.git/ ./public/    # public里有新的文件；把线上的git记录放到准备发布到git master分支
   - cd ./public
   - git config user.name "bjdzliu"  #修改name
   - git config user.email "dezhaoliu@gmail.com"  #修改email
