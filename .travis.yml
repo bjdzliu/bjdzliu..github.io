@@ -8,17 +8,17 @@ cache: npm
 before_install:
     - export TZ='Asia/Shanghai'
 
-install:
-  - npm install hexo #安装hexo及插件
-  - npm install --save hexo-generator-index
-  - npm install --save hexo-generator-archive
-  - npm install --save hexo-generator-tag
+#install:
+#  - npm install hexo #安装hexo及插件
+#  - npm install --save hexo-generator-index
+#  - npm install --save hexo-generator-archive
+#  - npm install --save hexo-generator-tag
 
 branches:
   only:
     - hexo # build master branch only
 script:
-  - hexo clean
+#  - hexo clean
   - hexo generate  # generate static files
   - cat public/index.html|wc -l
 after_script:
