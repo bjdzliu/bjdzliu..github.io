@@ -8,7 +8,7 @@ before_install:
     - export TZ='Asia/Shanghai'
 
 install:
-  - npm install -g hexo-cli #安装hexo及插件
+  - npm install hexo #安装hexo及插件
 
 branches:
   only:
