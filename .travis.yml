@@ -13,6 +13,8 @@ before_install:
 #  - npm install --save hexo-generator-index
 #  - npm install --save hexo-generator-archive
 #  - npm install --save hexo-generator-tag
+install:
+  - npm ls --depth 0
 
 branches:
   only:
