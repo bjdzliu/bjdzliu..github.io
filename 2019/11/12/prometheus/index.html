@@ -3,17 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>Archive: 2020 | Have a Nice Journey</title>
+    <title>prometheus | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Have a Nice Journey">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+        <meta name="keywords" content="k8s">
+    
+    <meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="prometheus">
+<meta property="og:url" content="http://yoursite.com/2019/11/12/prometheus/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-11-18T10:22:58.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have a Nice Journey">
+<meta name="twitter:title" content="prometheus">
     
 
     
@@ -120,83 +124,122 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>Archive: 2020
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-prometheus" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2020" class="archive-year"><i class="icon fa fa-calendar-o"></i>2020</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
-            </div>
-            <div class="date"><time datetime="2020-11-18T08:16:51.000Z" itemprop="datePublished">2020-11-18</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2020/11/18/k8s-autoscaler/">k8s 自动扩缩容概览</a>
+        prometheus
         </h1>
     
 
-        <p class="article-excerpt">
-            k8s 自动扩缩容概览Overview
-Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
+            </header>
         
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/11/12/prometheus/" class="article-date">
+            <time datetime="2019-11-11T22:19:41.000Z" itemprop="datePublished">2019-11-12</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/k8s/">k8s</a>
+    </div>
+
             </div>
-            <div class="date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></div>
-        </div>
         
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/06/04/ALA_KQL/">Azure Monitoring KQL Study</a>
-        </h1>
-    
+        
+        <div class="article-entry" itemprop="articleBody">
+            
+        </div>
+        <footer class="article-footer">
+            
 
-        <p class="article-excerpt">
-            azure-monitoring-KQLAzure monitor—Log AnalysticsVM’Extensions— OmsAgentForLinux
 
-        </p>
+
+    <a data-url="http://yoursite.com/2019/11/12/prometheus/" data-id="ckhn9cbfx000qynmc706xkfu1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
+
+    <section id="comments">
     
-        </div>
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
     
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -209,6 +252,29 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/11/12/kubeadm_certs/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Kubeadm_证书
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/11/08/linux_shell/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Linux’ Shell 编程题</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -326,11 +392,13 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'http://yoursite.com/2019/11/12/prometheus/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>

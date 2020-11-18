@@ -61,7 +61,7 @@
                                     <a class="main-nav-list-link" href="/">Home</a>
                                 </li>
                             
-                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/web前端/">web前端</a></li></ul>
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Technical-Notes/">Technical Notes</a></li></ul>
                                     
                                 <li class="main-nav-list-item" >
                                     <a class="main-nav-list-link" href="/about/index.html">About</a>
@@ -132,7 +132,7 @@
         
         <section class="archives-wrap">
             <div class="archive-year-wrap">
-                <a href="/archives/2011" class="archive-year"><i class="icon fa fa-calendar-o"></i>2011</a>
+                <a href="/archives/2017" class="archive-year"><i class="icon fa fa-calendar-o"></i>2017</a>
             </div>
             <div class="archives">
     
@@ -145,19 +145,162 @@
         
         <div class="article-meta">
             <div class="category">
-            
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
             </div>
-            <div class="date"><time datetime="2011-11-11T01:19:41.000Z" itemprop="datePublished">2011-11-11</time></div>
+            <div class="date"><time datetime="2017-12-05T13:08:57.000Z" itemprop="datePublished">2017-12-05</time></div>
         </div>
         
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2011/11/11/test7/">test7</a>
+        <a href="/2017/12/05/helmpart1/">helm快速理解</a>
         </h1>
     
 
         <p class="article-excerpt">
-            
+            Helm快速理解官方文档：地址
+概念：
+
+类似apt yum
+有一个stable仓库（网络上的），一个本地仓库（自己创建）
+helm-server使用k8s的api部署应用
+helm客户端操作charts
+
+
+创建了一个本地仓库，并且在本地的kubectl config view里，创建了helm-server–&gt; tiller  
+12345678910root@zbrand-T430:~
+        </p>
+    </div>
+</article>
+    
+
+    
+    
+    
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-11-11T01:19:41.000Z" itemprop="datePublished">2017-11-11</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/11/11/install_ceph/">Install Ceph</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            INSTALL CEPH ON A SINGLE NODE(BARE METAL)此文是在linuxone上创建ceph存储的例子。
+同amd64架构。脱胎于ceph的官方文档。
+如果是linuxone的机器，请设置/etc/hosts文件如下YOUR.HOST.PUBLIC.IP hostname
+更改iptables的规则，添加一条本机到本机的规则：iptables -A INPUT -s Y
+        </p>
+    </div>
+</article>
+    
+        </div>
+    
+
+    
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-11-07T22:16:31.000Z" itemprop="datePublished">2017-11-08</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/11/08/k8s_calico/">K8S-CALICO-网络验证</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            K8s-Calico-网络验证k8s和calico已经深度结合，在使用上也很方便。实验内容来自双方的官方文档。
+
+默认可以互相访问比如：
+12345kubectl run nginx --image=nginx --replicas=2kubectl expose deployment nginx --port=80kubectl run busybox --rm -ti --image=busy
+        </p>
+    </div>
+</article>
+    
+
+    
+    
+    
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-05-08T08:19:30.000Z" itemprop="datePublished">2017-05-08</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/05/08/k8s-network/">k8s_network</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            k8s网络设计三个层面的网络知识：
+
+docker network
+Third party network
+k8s network
+
+Third party network以Calico为例：  
+
+Glossary:CNI : Container Network InterfaceCNM : container network model
+
+The direct routes are set u
+        </p>
+    </div>
+</article>
+    
+        </div>
+    
+
+    
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-04-20T08:27:57.000Z" itemprop="datePublished">2017-04-20</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/04/20/linux-bridge/">linux_bridge</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            Linux Bridge and Virtual Networking学习linux网卡知识时遇到的一篇文章，非常基础。  
+原文看到13年的文章，有点感慨学习的有些晚了Linux Bridge 和 虚拟网络软件定义网络 (SDN) 当前正席卷网络产业。SDN 的关键功能之一就是网络虚拟化。sdn和网络虚拟化在当前已经是潮流，但他们并不是什么新的技术，Linux bridge才是这个领域的最早实践
         </p>
     </div>
 </article>
@@ -198,17 +341,26 @@
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2020/11/13/hello-world/" class="title">Hello World</a></p>
-                            <p class="item-date"><time datetime="2020-11-13T03:14:12.872Z" itemprop="datePublished">2020-11-13</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2020/11/18/k8s-autoscaler/" class="title">k8s 自动扩缩容概览</a></p>
+                            <p class="item-date"><time datetime="2020-11-18T08:16:51.000Z" itemprop="datePublished">2020-11-18</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/11/12/test6/" class="title">test6</a></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2020/06/04/ALA_KQL/" class="title">Azure Monitoring KQL Study</a></p>
+                            <p class="item-date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2019/11/12/kubeadm_certs/" class="title">Kubeadm_证书</a></p>
                             <p class="item-date"><time datetime="2019-11-11T23:11:41.000Z" itemprop="datePublished">2019-11-12</time></p>
                         </div>
                     </li>
@@ -216,17 +368,8 @@
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/11/12/test2/" class="title">test2</a></p>
-                            <p class="item-date"><time datetime="2019-11-11T22:26:35.000Z" itemprop="datePublished">2019-11-12</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2019/11/12/test4/" class="title">test4</a></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2019/11/12/prometheus/" class="title">prometheus</a></p>
                             <p class="item-date"><time datetime="2019-11-11T22:19:41.000Z" itemprop="datePublished">2019-11-12</time></p>
                         </div>
                     </li>
@@ -234,9 +377,9 @@
                     <li>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/web前端/">web前端</a></p>
-                            <p class="item-title"><a href="/2019/11/12/test1/" class="title">test1</a></p>
-                            <p class="item-date"><time datetime="2019-11-11T22:16:31.000Z" itemprop="datePublished">2019-11-12</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2019/11/08/linux_shell/" class="title">Linux’ Shell 编程题</a></p>
+                            <p class="item-date"><time datetime="2019-11-07T22:26:35.000Z" itemprop="datePublished">2019-11-08</time></p>
                         </div>
                     </li>
                 
@@ -249,7 +392,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/web前端/">web前端</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Technical-Notes/">Technical Notes</a><span class="category-list-count">13</span></li></ul>
         </div>
     </div>
 
@@ -259,7 +402,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">November 2011</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -269,17 +412,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/first/">first</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tag1111/">tag1111</a><span class="tag-list-count">1</span></li></ul>
-        </div>
-    </div>
-
-
-            
-                
-    <div class="widget-wrap widget-float">
-        <h3 class="widget-title">tag cloud</h3>
-        <div class="widget tagcloud">
-            <a href="/tags/first/" style="font-size: 10px;">first</a> <a href="/tags/tag1111/" style="font-size: 10px;">tag1111</a>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/aliyun/">aliyun</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azure/">azure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">2</span></li></ul>
         </div>
     </div>
 

@@ -3,17 +3,26 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>Archive: 2020 | Have a Nice Journey</title>
+    <title>k8s 自动扩缩容概览 | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Have a Nice Journey">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+        <meta name="keywords" content="k8s">
+    
+    <meta name="description" content="k8s 自动扩缩容概览Overview Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s 自动扩缩容概览">
+<meta property="og:url" content="http://yoursite.com/2020/11/18/k8s-autoscaler/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="k8s 自动扩缩容概览Overview Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image1.png">
+<meta property="og:updated_time" content="2020-11-18T10:22:58.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have a Nice Journey">
+<meta name="twitter:title" content="k8s 自动扩缩容概览">
+<meta name="twitter:description" content="k8s 自动扩缩容概览Overview Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A">
+<meta name="twitter:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image1.png">
     
 
     
@@ -120,83 +129,145 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>Archive: 2020
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-k8s-autoscaler" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2020" class="archive-year"><i class="icon fa fa-calendar-o"></i>2020</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
-            </div>
-            <div class="date"><time datetime="2020-11-18T08:16:51.000Z" itemprop="datePublished">2020-11-18</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2020/11/18/k8s-autoscaler/">k8s 自动扩缩容概览</a>
+        k8s 自动扩缩容概览
         </h1>
     
 
-        <p class="article-excerpt">
-            k8s 自动扩缩容概览Overview
-Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
+            </header>
         
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2020/11/18/k8s-autoscaler/" class="article-date">
+            <time datetime="2020-11-18T08:16:51.000Z" itemprop="datePublished">2020-11-18</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/k8s/">k8s</a>
+    </div>
+
             </div>
-            <div class="date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></div>
-        </div>
         
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/06/04/ALA_KQL/">Azure Monitoring KQL Study</a>
-        </h1>
-    
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h3 id="k8s-自动扩缩容概览"><a href="#k8s-自动扩缩容概览" class="headerlink" title="k8s 自动扩缩容概览"></a>k8s 自动扩缩容概览</h3><h5 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h5><p><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image1.png" alt="Overview"></p>
+<p>Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, AWS and Azure. Version 1.0 (GA) was released with kubernetes 1.8.<br>当前项目中使用该组件，组件和k8s有版本匹配的关系。</p>
+<p><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image2.png" alt="版本对应关系"></p>
+<p><a href="https://github.com/kubernetes/autoscaler/tree/cluster-autoscaler-release-1.18/cluster-autoscaler" target="_blank" rel="noopener">详细介绍</a></p>
+<p><strong><em>Vertical Pod Autoscaler</em></strong> - a set of components that automatically adjust the amount of CPU and memory requested by pods running in the Kubernetes Cluster. Current state - beta.</p>
+<p><strong><em>Addon Resizer</em></strong> - a simplified version of vertical pod autoscaler that modifies resource requests of a deployment based on the number of nodes in the Kubernetes Cluster. Current state - beta.<br><a href="https://github.com/kubernetes/autoscaler/tree/addon-resizer-release-1.8/addon-resizer" target="_blank" rel="noopener">Addon Resize详细介绍</a>：</p>
+<p><em>Charts - Supported Helm charts for components above.</em></p>
+<p><strong><em>HPA</em></strong><br>Horizontal Pod Autoscaler automatically scales the number of Pods in a replication controller, deployment, replica set or stateful set based on observed CPU utilization (or, with beta support, on some other, application-provided metrics).<br><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/" target="_blank" rel="noopener">HPA详细介绍</a></p>
+<h5 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h5><p>up 和 down 意味着保持相同数量的实例，但增加或减少 CPU 或 Server 的内存。<br>In 和 out 是增加或删除服务实例，但保持资源不变。</p>
+<h5 id="监控-扩缩容各组件关系"><a href="#监控-扩缩容各组件关系" class="headerlink" title="监控/扩缩容各组件关系"></a>监控/扩缩容各组件关系</h5><p><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image3.png" alt="components"></p>
+<p>比如在aks中的组件：<br><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/cluster-autoscaler4.png" alt="azure"></p>
+<p><a href="https://docs.azure.cn/zh-cn/aks/concepts-scale#cluster-autoscaler" target="_blank" rel="noopener">azure doc</a></p>
+<p>K8s的API： TBD</p>
+<h5 id="Cluster-Autoscaler-（CA）"><a href="#Cluster-Autoscaler-（CA）" class="headerlink" title="Cluster Autoscaler （CA）"></a>Cluster Autoscaler （CA）</h5><p>In another artical</p>
+<h5 id="HPA"><a href="#HPA" class="headerlink" title="HPA"></a>HPA</h5><p>前提：启用了metric-server<br>Metrics Server .note</p>
+<p>通过命令方式启动：<br>kubectl autoscale deployment azure-vote-front –cpu-percent=50 –min=3 –max=10<br>或者，通过yaml文件自定义：<br><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/k8s_autoscaler/image5.png" alt="yaml file"></p>
+<p><strong><em>HPA的算法:</em></strong><br>期望副本数 = 向上取整 ( 现在测量值 / 期望测量值 )<br>现在测量值往往是所有副本测量值的平均值<br>期望测量值则往往是所有副本Requests值 * 缩扩容目标值.<br>（缩扩容目标值在创建HPA资源时定义）</p>
+<p>期望副本数 = 向上取整 ( sum ( 测量值 ) / sum ( Requests ) * 缩扩容目标值)<br>当前的副本数是2, 指定的Requests为cpu: 100m, 若现在的测量值为cpu: 200m, 缩扩容目标值为50%, 则:<br>期望副本数 = ceil(200/(100*50%)) = ceil(4) = 4</p>
+<p>targetCPUUtilizationPercentage:<br>值越低，说明期望得到的pod 越多。</p>
+<p>查看hpa配置：<br>kubectl get hpa</p>
+<p>HPA支持的版本<br><em>autoscaling/v1、autoscaling/v2beta1和autoscaling/v2beta2</em>  三个大版本。<br>autoscaling/v1 —  CPU only<br>autoscaling/v2beta1 — Support Custom Metric<br>autoscaling/v2beta2 —– 额外增加了外部指标支持  </p>
+<p>控制HPA<br>controller mamaner参数：<br><em>-horizontal-pod-autoscaler-sync-period</em> 确定 HPA 对于Pods组指标的监控频率。默认的周期为30秒。<br><em>-horizontal-pod-autoscaler-upscale-delay</em> 两次扩展操作之间的默认间隔为3分钟<br><em>-horizontal-pod-autoscaler-downscale-delay</em> 两个缩小操作之间的默认间隔为5分钟  </p>
+<p>官方链接：<br><a href="https://github.com/kubernetes/autoscaler" target="_blank" rel="noopener">https://github.com/kubernetes/autoscaler</a><br><a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/instrumentation/custom-metrics-api.md" target="_blank" rel="noopener">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/instrumentation/custom-metrics-api.md</a></p>
 
-        <p class="article-excerpt">
-            azure-monitoring-KQLAzure monitor—Log AnalysticsVM’Extensions— OmsAgentForLinux
+        </div>
+        <footer class="article-footer">
+            
 
-        </p>
+
+
+    <a data-url="http://yoursite.com/2020/11/18/k8s-autoscaler/" data-id="ckhn9cbfo000cynmcjj0bciu9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
+
+    <section id="comments">
     
-        </div>
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
     
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -209,6 +280,19 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/06/04/ALA_KQL/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">Azure Monitoring KQL Study</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -326,11 +410,13 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'http://yoursite.com/2020/11/18/k8s-autoscaler/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>

@@ -3,13 +3,13 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>Archive: 2020 | Have a Nice Journey</title>
+    <title>Tag: k8s | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta property="og:type" content="website">
 <meta property="og:title" content="Have a Nice Journey">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/k8s/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
@@ -120,7 +120,7 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>Archive: 2020
+    <i class="icon fa fa-tag"></i>Tag: <em>k8s</em>
     </h1>
 </div>
                         <div class="main-body-content">
@@ -166,6 +166,48 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
 
     
     
+        
+            </div></section>
+        
+        
+        <section class="archives-wrap">
+            <div class="archive-year-wrap">
+                <a href="/archives/2019" class="archive-year"><i class="icon fa fa-calendar-o"></i>2019</a>
+            </div>
+            <div class="archives">
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2019-11-11T23:11:41.000Z" itemprop="datePublished">2019-11-12</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2019/11/12/kubeadm_certs/">Kubeadm_证书</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            Kubeadm_证书介绍kubeadm中证书的用法，权限以及自定义证书的注意事项。
+kubeadm启动后生成如下证书:
+
+ls -l /etc/kubernetes/pki-rw——- 1 root root 1679 Sep 6 14:12 ca.key-rw-r–r– 1 root root 1025 Sep 6 14:12 ca.crt-rw——- 1 root root 1675 Sep 
+        </p>
+    </div>
+</article>
+    
+
+    
+    
     
     
         <article class="article article-summary">
@@ -175,23 +217,179 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
             <div class="category">
             <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
             </div>
-            <div class="date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></div>
+            <div class="date"><time datetime="2019-11-11T22:19:41.000Z" itemprop="datePublished">2019-11-12</time></div>
         </div>
         
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2020/06/04/ALA_KQL/">Azure Monitoring KQL Study</a>
+        <a href="/2019/11/12/prometheus/">prometheus</a>
         </h1>
     
 
         <p class="article-excerpt">
-            azure-monitoring-KQLAzure monitor—Log AnalysticsVM’Extensions— OmsAgentForLinux
-
+            
         </p>
     </div>
 </article>
     
         </div>
+    
+
+    
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2019-10-28T21:44:59.000Z" itemprop="datePublished">2019-10-29</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2019/10/29/Ingress_Experiment/">INGRESS EXPERIMENT</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            本文介绍了ingress 实践。
+官方文档：地址
+
+创建service创建3个service，实际应用中可能不止这三个。创建ingress
+
+12kubectl create ns ingress-nginx
+
+创建后端服务1，并暴露出端口
+123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re
+        </p>
+    </div>
+</article>
+    
+
+    
+    
+        
+            </div></section>
+        
+        
+        <section class="archives-wrap">
+            <div class="archive-year-wrap">
+                <a href="/archives/2017" class="archive-year"><i class="icon fa fa-calendar-o"></i>2017</a>
+            </div>
+            <div class="archives">
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-12-05T13:08:57.000Z" itemprop="datePublished">2017-12-05</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/12/05/helmpart1/">helm快速理解</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            Helm快速理解官方文档：地址
+概念：
+
+类似apt yum
+有一个stable仓库（网络上的），一个本地仓库（自己创建）
+helm-server使用k8s的api部署应用
+helm客户端操作charts
+
+
+创建了一个本地仓库，并且在本地的kubectl config view里，创建了helm-server–&gt; tiller  
+12345678910root@zbrand-T430:~
+        </p>
+    </div>
+</article>
+    
+
+    
+    
+    
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-11-07T22:16:31.000Z" itemprop="datePublished">2017-11-08</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/11/08/k8s_calico/">K8S-CALICO-网络验证</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            K8s-Calico-网络验证k8s和calico已经深度结合，在使用上也很方便。实验内容来自双方的官方文档。
+
+默认可以互相访问比如：
+12345kubectl run nginx --image=nginx --replicas=2kubectl expose deployment nginx --port=80kubectl run busybox --rm -ti --image=busy
+        </p>
+    </div>
+</article>
+    
+        </div>
+    
+
+    
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+            </div>
+            <div class="date"><time datetime="2017-05-08T08:19:30.000Z" itemprop="datePublished">2017-05-08</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2017/05/08/k8s-network/">k8s_network</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            k8s网络设计三个层面的网络知识：
+
+docker network
+Third party network
+k8s network
+
+Third party network以Calico为例：  
+
+Glossary:CNI : Container Network InterfaceCNM : container network model
+
+The direct routes are set u
+        </p>
+    </div>
+</article>
     
 
 

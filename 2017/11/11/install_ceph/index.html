@@ -3,18 +3,24 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>文章分类 | Have a Nice Journey</title>
+    <title>Install Ceph | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="文章分类">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+        <meta name="keywords" content="ceph">
+    
+    <meta name="description" content="INSTALL CEPH ON A SINGLE NODE(BARE METAL)此文是在linuxone上创建ceph存储的例子。 同amd64架构。脱胎于ceph的官方文档。 如果是linuxone的机器，请设置/etc/hosts文件如下YOUR.HOST.PUBLIC.IP hostname 更改iptables的规则，添加一条本机到本机的规则：iptables -A INPUT -s Y">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Install Ceph">
+<meta property="og:url" content="http://yoursite.com/2017/11/11/install_ceph/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="INSTALL CEPH ON A SINGLE NODE(BARE METAL)此文是在linuxone上创建ceph存储的例子。 同amd64架构。脱胎于ceph的官方文档。 如果是linuxone的机器，请设置/etc/hosts文件如下YOUR.HOST.PUBLIC.IP hostname 更改iptables的规则，添加一条本机到本机的规则：iptables -A INPUT -s Y">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2020-11-18T10:22:58.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文章分类">
+<meta name="twitter:title" content="Install Ceph">
+<meta name="twitter:description" content="INSTALL CEPH ON A SINGLE NODE(BARE METAL)此文是在linuxone上创建ceph存储的例子。 同amd64架构。脱胎于ceph的官方文档。 如果是linuxone的机器，请设置/etc/hosts文件如下YOUR.HOST.PUBLIC.IP hostname 更改iptables的规则，添加一条本机到本机的规则：iptables -A INPUT -s Y">
     
 
     
@@ -121,34 +127,81 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <em class="page-title-link" data-url="/categories/index.html">文章分类</em>
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="page-" class="article article-single article-type-page" itemscope itemprop="blogPost">
+                            <article id="post-install_ceph" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        文章分类
+        Install Ceph
         </h1>
     
 
             </header>
         
         
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2017/11/11/install_ceph/" class="article-date">
+            <time datetime="2017-11-11T01:19:41.000Z" itemprop="datePublished">2017-11-11</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/ceph/">ceph</a>
+    </div>
+
+            </div>
+        
         
         <div class="article-entry" itemprop="articleBody">
-            
+            <h3 id="INSTALL-CEPH-ON-A-SINGLE-NODE-BARE-METAL"><a href="#INSTALL-CEPH-ON-A-SINGLE-NODE-BARE-METAL" class="headerlink" title="INSTALL CEPH ON A SINGLE NODE(BARE METAL)"></a>INSTALL CEPH ON A SINGLE NODE(BARE METAL)</h3><p>此文是在linuxone上创建ceph存储的例子。</p>
+<p>同amd64架构。脱胎于ceph的官方文档。</p>
+<p>如果是linuxone的机器，请设置/etc/hosts文件如下<br>YOUR.HOST.PUBLIC.IP hostname</p>
+<p>更改iptables的规则，添加一条本机到本机的规则：<br><code>iptables -A INPUT -s YOUR.HOST.PUBLIC.IP -d YOUR.HOST.PUBLIC.IP -j ACCEPT</code></p>
+<p>更新安装<br><code>apt-get update &amp;&amp; apt-get -y install ceph-deploy</code></p>
+<p>设置ssh本地无密码登陆：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br><span class="line">cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mkdir my-cluster &amp;&amp; cd my-cluster</span><br><span class="line"></span><br><span class="line">ceph-deploy new hostname</span><br><span class="line"></span><br><span class="line">echo “osd pool default size = 2” &gt;&gt; ceph.conf</span><br><span class="line">echo “osd crush chooseleaf type = 0” &gt;&gt;ceph.conf</span><br><span class="line">echo “osd journal size = 512” &gt;&gt;ceph.conf</span><br><span class="line"></span><br><span class="line">echo “osd pool default pg num = 75” &gt;&gt;ceph.conf</span><br><span class="line">echo “osd pool default pgp num = 75” &gt;&gt;ceph.conf</span><br><span class="line"></span><br><span class="line">echo “osd_max_object_name_len = 256” &gt;&gt;ceph.conf</span><br><span class="line">echo “osd_max_object_namespace_len = 64” &gt;&gt;ceph.conf</span><br><span class="line"></span><br><span class="line">echo “filestore xattr use omap = true” &gt;&gt;ceph.conf</span><br></pre></td></tr></table></figure>
+
+<p>参考 <a href="http://docs.ceph.com/docs/hammer/rados/configuration/filesystem-recommendations/" target="_blank" rel="noopener">offical doc</a> ext4文件系统建议</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">ceph-deploy install hostname</span><br><span class="line"></span><br><span class="line">apt-get install ceph-fs-common</span><br><span class="line"></span><br><span class="line">ceph-deploy mon create-initial</span><br><span class="line"></span><br><span class="line">mkdir /osd1</span><br><span class="line"></span><br><span class="line">mkdir /osd2</span><br><span class="line"></span><br><span class="line">mkdir /osd3</span><br><span class="line"></span><br><span class="line">chown ceph:ceph /osd1</span><br><span class="line">chown ceph:ceph /osd2</span><br><span class="line">chown ceph:ceph /osd3</span><br><span class="line"></span><br><span class="line">ceph-deploy osd prepare ceph01:/osd1 ceph01:/osd2 ceph01:/osd3</span><br><span class="line"></span><br><span class="line">ceph-deploy admin ceph01</span><br><span class="line"></span><br><span class="line">ceph-deploy osd activate ceph01:/osd1 ceph01:/osd2 ceph01:/osd3</span><br><span class="line"></span><br><span class="line">ceph health</span><br><span class="line"></span><br><span class="line">ceph -s</span><br></pre></td></tr></table></figure>
+
+<p><em>检查cepth</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#ceph status</span><br><span class="line">pgs is less than XXX</span><br></pre></td></tr></table></figure>
+
+<p><em>计算PG</em></p>
+<blockquote>
+<p>Total PGs = ((Total_number_of_OSD * 100) / max_replication_count) / pool_count<br>ceph osd pool set rbd pg_num 150<br>ceph osd pool set rbd pgp_num 150</p>
+</blockquote>
+<p><em>减少pg_num</em></p>
+<blockquote>
+<p>Clear everything and reinstall ceph<br><code>ceph-deploy purge ceph01</code></p>
+</blockquote>
+<p><em>创建Cepth FS：</em></p>
+<ul>
+<li>创建元数据服务器<br>  <code>ceph-deploy mds create ceph01</code></li>
+<li>创建两个存储池  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ceph osd pool create cephfs_data 64</span><br><span class="line">ceph osd pool create cephfs_metadata 64</span><br><span class="line"></span><br><span class="line">ceph fs new cephshare cephfs_metadata cephfs_data</span><br><span class="line"></span><br><span class="line">mount -t ceph -o name=admin,secretfile=/etc/ceph/admin.secret &#123;MON’s IP&#125;:/ /mnt/mycephfs</span><br><span class="line"></span><br><span class="line">or</span><br><span class="line"></span><br><span class="line">mount -t ceph -o name=admin,secret=AQDVJghZd56vHxAAOqREEflJFdgQiqcpQ5BG/Q== &#123;MON’s IP&#125;:/ /mnt/mycephfs</span><br></pre></td></tr></table></figure>
+
+
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="http://yoursite.com/categories/index.html" data-id="ckhn9cbff0001ynmcr248msz9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2017/11/11/install_ceph/" data-id="ckhn9cbfn000bynmcvssjrist" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -233,6 +286,29 @@
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/12/05/helmpart1/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            helm快速理解
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2017/11/08/k8s_calico/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">K8S-CALICO-网络验证</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -350,7 +426,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'http://yoursite.com/categories/index.html';
+    var disqus_url = 'http://yoursite.com/2017/11/11/install_ceph/';
     
     (function() {
     var dsq = document.createElement('script');

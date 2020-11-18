@@ -3,18 +3,24 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>文章分类 | Have a Nice Journey</title>
+    <title>INGRESS EXPERIMENT | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="文章分类">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+        <meta name="keywords" content="k8s">
+    
+    <meta name="description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="INGRESS EXPERIMENT">
+<meta property="og:url" content="http://yoursite.com/2019/10/29/Ingress_Experiment/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
 <meta property="og:locale" content="en">
 <meta property="og:updated_time" content="2020-11-18T10:22:58.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文章分类">
+<meta name="twitter:title" content="INGRESS EXPERIMENT">
+<meta name="twitter:description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
     
 
     
@@ -121,34 +127,111 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <em class="page-title-link" data-url="/categories/index.html">文章分类</em>
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="page-" class="article article-single article-type-page" itemscope itemprop="blogPost">
+                            <article id="post-Ingress_Experiment" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        文章分类
+        INGRESS EXPERIMENT
         </h1>
     
 
             </header>
         
         
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/10/29/Ingress_Experiment/" class="article-date">
+            <time datetime="2019-10-28T21:44:59.000Z" itemprop="datePublished">2019-10-29</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/k8s/">k8s</a>
+    </div>
+
+            </div>
+        
         
         <div class="article-entry" itemprop="articleBody">
-            
+            <p>本文介绍了ingress 实践。</p>
+<p>官方文档：<a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank" rel="noopener">地址</a></p>
+<ol>
+<li>创建service<br>创建3个service，实际应用中可能不止这三个。<br>创建ingress</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">kubectl create ns ingress-nginx</span><br></pre></td></tr></table></figure>
+
+<p>创建后端服务1，并暴露出端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --replicas=1 --port=8080 -n ingress-nginx</span><br><span class="line">kubectl expose deployment echoheaders --port=80 --target-port=8080 --name=echoheaders-x -n ingress-nginx</span><br><span class="line">//提供default service</span><br></pre></td></tr></table></figure>
+
+<p>创建后端服务2：tomcat service  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl run tomcat --image=tomcat:docs --replicas=1 --port=8080 -n ingress-nginx</span><br><span class="line">kubectl expose deployment tomcat --port=80 --target-port=8080 --name=tomcat-x -n ingress-nginx  </span><br><span class="line"></span><br><span class="line">//自制镜像tomcat:docs，将webapps.list中的应用（ROOT  docs  examples  host-manager  manager）都copy到webapps中</span><br></pre></td></tr></table></figure>
+
+<p>创建后端服务3：nginx service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx --image=nginx --replicas=1 --port=80 -n ingress-nginx</span><br><span class="line">kubectl expose deployment nginx  --port=80 --target-port=80 --name=nginx-x -n ingress-nginx</span><br><span class="line">//代表其他服务</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>创建ingress rule<br>ingress rule 可以有多个，创建后，不需要重启nginx-controller。  </p>
+<ul>
+<li>controller怎么识别到ingress rule?<br>controller的启动参数默认指定class 为ingress。同时如果没有class的ingress rule，也会由controler负责使其生效。通过这种方式，可以实现多个controller对应实现不同的insgress rule。<br>我们依次创建2个rule:<br>RULE-1:  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: tomcat-root-ingress</span><br><span class="line">  annotations:</span><br><span class="line">    ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: tomcat-x</span><br><span class="line">          servicePort: 80</span><br></pre></td></tr></table></figure>
+
+<p>域名：<a href="http://192.168.37.112/" target="_blank" rel="noopener">http://192.168.37.112/</a><br>根路径访问，转发到 tomcat-x 服务的ROOT应用。<br>针对 / , nginx-controller自动配置了https转发：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ($redirect_to_https) &#123;</span><br><span class="line"></span><br><span class="line">      return 308 https://$best_http_host$request_uri;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>RULE-2:  </p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: tomcat-ingress</span><br><span class="line">  namespace: ingress-nginx</span><br><span class="line">  annotations:</span><br><span class="line">    ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /docs</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: tomcat-x</span><br><span class="line">          servicePort: 80</span><br><span class="line">    host: tomcat.bar.com</span><br></pre></td></tr></table></figure>
+
+<p>  域名：tomcat.bar.com<br>  路径： /docs<br>  转发到tomcat-x的docs应用里。</p>
+<ol start="3">
+<li><p>创建 nginx-controller  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/kubernetes/ingress-nginx/blob/nginx-0.20.0/deploy/with-rbac.yaml</span><br><span class="line">kubectl apply -f with-rbac.yaml</span><br></pre></td></tr></table></figure>
+
+<p>注：执行前，手工修改with-rbac.yaml,</p>
+<ul>
+<li><p>添加hostNetwork: true。<br>为了本次测试，nginx-controller在一台node节点上启动，并对外提供服务。生产上一般准备3个node对外服务，或者前面放一个svc绑定slb。</p>
+</li>
+<li><p>设置默认的default service，专门处理ingress rule没有匹配的情况。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- --default-backend-service=$(POD_NAMESPACE)/echoheaders-x</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>效果<br>本地电脑绑定tomcat.bar.com解析到vm ip 192.168.37.112。  </p>
+<ul>
+<li><p>访问 <a href="http://tomcat.bar.com/docs" target="_blank" rel="noopener">http://tomcat.bar.com/docs</a> — ok 仍旧是http</p>
+</li>
+<li><p>访问 <a href="http://tomcat.bar.com/fakeserver" target="_blank" rel="noopener">http://tomcat.bar.com/fakeserver</a> — 返回 default backend - 404</p>
+</li>
+<li><p>访问 <a href="http://192.168.37.112/" target="_blank" rel="noopener">http://192.168.37.112/</a> —redirect_to_http–&gt; <a href="https://192.168.37.112/" target="_blank" rel="noopener">https://192.168.37.112/</a></p>
+<ul>
+<li>证书是nginx-controller中配置的  <em>default-fake-certificate.pem</em></li>
+</ul>
+</li>
+<li><p>访问 <a href="https://192.168.37.112/asdasd" target="_blank" rel="noopener">https://192.168.37.112/asdasd</a> – Tomcat返回404</p>
+</li>
+</ul>
+</li>
+</ol>
+
         </div>
         <footer class="article-footer">
             
 
 
 
-    <a data-url="http://yoursite.com/categories/index.html" data-id="ckhn9cbff0001ynmcr248msz9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2019/10/29/Ingress_Experiment/" data-id="ckhn9cbff0002ynmcg3aj1oq6" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -233,6 +316,29 @@
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/11/08/linux_shell/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Linux’ Shell 编程题
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/08/20/aliyun-summary2/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">aliyun_summary2</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -350,7 +456,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'http://yoursite.com/categories/index.html';
+    var disqus_url = 'http://yoursite.com/2019/10/29/Ingress_Experiment/';
     
     (function() {
     var dsq = document.createElement('script');

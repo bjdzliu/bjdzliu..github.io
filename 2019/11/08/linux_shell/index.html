@@ -3,17 +3,24 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>Archive: 2020 | Have a Nice Journey</title>
+    <title>Linux’ Shell 编程题 | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Have a Nice Journey">
-<meta property="og:url" content="http://yoursite.com/archives/2020/index.html">
+        <meta name="keywords" content="linux">
+    
+    <meta name="description" content="问题1：使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为： 123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlgm">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux’ Shell 编程题">
+<meta property="og:url" content="http://yoursite.com/2019/11/08/linux_shell/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="问题1：使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为： 123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlgm">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-11-18T10:22:58.993Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have a Nice Journey">
+<meta name="twitter:title" content="Linux’ Shell 编程题">
+<meta name="twitter:description" content="问题1：使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为： 123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlgm">
     
 
     
@@ -120,83 +127,176 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>Archive: 2020
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-linux_shell" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2020" class="archive-year"><i class="icon fa fa-calendar-o"></i>2020</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
-            </div>
-            <div class="date"><time datetime="2020-11-18T08:16:51.000Z" itemprop="datePublished">2020-11-18</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2020/11/18/k8s-autoscaler/">k8s 自动扩缩容概览</a>
+        Linux’ Shell 编程题
         </h1>
     
 
-        <p class="article-excerpt">
-            k8s 自动扩缩容概览Overview
-Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
+            </header>
         
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/11/08/linux_shell/" class="article-date">
+            <time datetime="2019-11-07T22:26:35.000Z" itemprop="datePublished">2019-11-08</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/linux/">linux</a>
+    </div>
+
             </div>
-            <div class="date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></div>
-        </div>
         
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/06/04/ALA_KQL/">Azure Monitoring KQL Study</a>
-        </h1>
-    
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>问题1：<br>使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@test test]# sh /server/scripts/test.sh  </span><br><span class="line">[root@test test]# ls  </span><br><span class="line">coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.html</span><br><span class="line">gmkhrancxh_test.html tmdjormaxr_test.html wzewnojiwe_test.html</span><br><span class="line">jdxexendbe_test.html ugaywanjlm_test.html xzzruhdzda_test.html</span><br><span class="line">qcawgsrtkp_test.html vfrphtqjpc_test.html</span><br></pre></td></tr></table></figure>
 
-        <p class="article-excerpt">
-            azure-monitoring-KQLAzure monitor—Log AnalysticsVM’Extensions— OmsAgentForLinux
+<blockquote>
+<p>答案:<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/generate_random.sh" target="_blank" rel="noopener">generate_random.sh</a></p>
+</blockquote>
+<p>问题2:<br>请用至少两种方法实现;将以上文件名中的test全部改成oldgirl(用for循环实现),并且html改成大写。</p>
+<blockquote>
+<p>答案:<br><a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/rename_1.sh" target="_blank" rel="noopener">rename_1.sh</a><br><a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/rename_2.sh" target="_blank" rel="noopener">rename_2.sh</a></p>
+</blockquote>
+<p>问题3：<br>批量创建10个系统帐号test01-test10并设置密码（密码为随机8位字符串）。</p>
+<blockquote>
+<p>答案:<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/create_users.sh" target="_blank" rel="noopener">create_users.sh</a></p>
+</blockquote>
+<p>问题4:<br>写一个脚本，实现判断10.0.0.0/24网络里，当前在线用户的IP有哪些（方法有很多）</p>
+<blockquote>
+<p>答案:<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/ping.sh" target="_blank" rel="noopener">ping.sh</a></p>
+</blockquote>
+<p>问题5:<br>写一个脚本解决DOS攻击生产案例<br>提示：根据web日志或者或者网络连接数，监控当某个IP并发连接数或者短时内PV达到100，即调用防火墙命令封掉对应的IP，监控频率每隔3分钟。防火墙命令为：iptables -A INPUT -s 10.0.1.10 -j DROP。</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/blockip.sh" target="_blank" rel="noopener">blockip.sh</a></p>
+</blockquote>
+<p>问题6:<br>开发shell脚本分别实现以脚本传参以及read读入的方式比较2个整数大小。以屏幕输出的方式提醒用户比较结果。注意：一共是开发2个脚本。当用脚本传参以及read读入的方式需要对变量是否为数字、并且传参个数做判断。</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/compare_2.sh" target="_blank" rel="noopener">compare_2.sh</a><br>类似的求和：<br><a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/sum_1.sh" target="_blank" rel="noopener">sum_1.sh</a></p>
+</blockquote>
+<p>问题7:<br>打印选择菜单，一键安装Web服务：</p>
+<p>[root@testscripts]# sh menu.sh<br>1.[install lamp]<br>2.[install lnmp]<br>3.[exit]</p>
+<p>pls input the num you want:</p>
+<p>要求：</p>
+<p>1、当用户输入1时，输出“startinstalling lamp.”然后执行/server/scripts/lamp.sh，脚本内容输出”lamp is installed”后退出脚本；<br>2、当用户输入2时，输出“startinstalling lnmp.” 然后执行/server/scripts/lnmp.sh输出”lnmp is installed”后退出脚本;<br>3、当输入3时，退出当前菜单及脚本；<br>4、当输入任何其它字符，给出提示“Input error”后退出脚本。<br>5、要对执行的脚本进行相关条件判断，例如：脚本是否存在，是否可执行等。</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/menu.sh" target="_blank" rel="noopener">menu.sh</a></p>
+</blockquote>
+<p>问题8:  </p>
+<p>1) 监控web服务是否正常，不低于3种监控策略。<br>2) 监控db服务是否正常，不低于3种监控策略。要求间隔1分钟，持续监控。</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/monitor_web.sh" target="_blank" rel="noopener">monitor_web</a></p>
+</blockquote>
+<p>问题9:<br>面试及实战考试题：监控web站点目录（/var/html/www）下所有文件是否被恶意篡改（文件内容被改了），如果有就打印改动的文件名（发邮件），定时任务每3分钟执行一次(10分钟时间完成)。</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/monitor_web_dir.sh" target="_blank" rel="noopener">monitor_web_dir.sh</a></p>
+</blockquote>
+<p>问题10:<br>抓阄题目：运维派提供外出企业项目实践机会（第6次）来了（本月中旬），但是，名额有限，队员限3人（班长带队）。</p>
+<p>因此需要挑选学生，因此需要一个抓阄的程序：</p>
+<p>要求：</p>
+<p>1、执行脚本后，想去的同学输入英文名字全拼，产生随机数01-99之间的数字，数字越大就去参加项目实践，前面已经抓到的数字，下次不能在出现相同数字。<br>2、第一个输入名字后，屏幕输出信息，并将名字和数字记录到文件里，程序不能退出继续等待别的学生输入</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/chooseauser.sh" target="_blank" rel="noopener">chooseauser.sh</a></p>
+</blockquote>
+<p>问题11：<br>bash for循环打印下面这句话中字母数不大于6的单词(昆仑万维面试题)。<br>I am test teacher welcome to test training class.</p>
+<blockquote>
+<p>答案：<a href="https://github.com/bjdzliu/script/blob/master/shell/quiz1/charlength.sh" target="_blank" rel="noopener">charlength.sh</a></p>
+</blockquote>
 
-        </p>
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://yoursite.com/2019/11/08/linux_shell/" data-id="ckhn9cbfv000nynmc00q5uy3a" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
+
+    <section id="comments">
     
-        </div>
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
     
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -209,6 +309,29 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2019/11/12/prometheus/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            prometheus
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2019/10/29/Ingress_Experiment/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">INGRESS EXPERIMENT</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -326,11 +449,13 @@ Cluster Autoscaler - a component that automatically adjusts the size of a Kubern
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'http://yoursite.com/2019/11/08/linux_shell/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>
