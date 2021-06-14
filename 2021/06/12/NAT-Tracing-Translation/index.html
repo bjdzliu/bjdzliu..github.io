@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>NAT-Tracing(Translation) | Have a Nice Journey</title>
+    <title>NAT-Tracing-part1(Translation) | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
@@ -12,14 +12,14 @@
     <meta name="description" content="介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。 连接跟踪(Connection tracking）">
 <meta name="keywords" content="k8s,network">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NAT-Tracing(Translation)">
+<meta property="og:title" content="NAT-Tracing-part1(Translation)">
 <meta property="og:url" content="http://yoursite.com/2021/06/12/NAT-Tracing-Translation/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
 <meta property="og:description" content="介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。 连接跟踪(Connection tracking）">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-06-13T07:31:06.727Z">
+<meta property="og:updated_time" content="2021-06-14T03:26:01.005Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NAT-Tracing(Translation)">
+<meta name="twitter:title" content="NAT-Tracing-part1(Translation)">
 <meta name="twitter:description" content="介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。 连接跟踪(Connection tracking）">
     
 
@@ -138,7 +138,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-        NAT-Tracing(Translation)
+        NAT-Tracing-part1(Translation)
         </h1>
     
 
@@ -222,7 +222,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trace id 20a4ef inet trace_debug trace_pre packet: iif &quot;enp0&quot; ether saddr .. ip saddr 10.2.1.2 ip daddr 10.1.2.3 ip protocol tcp tcp dport 1222 tcp flags == syn</span><br></pre></td></tr></table></figure>
 
 <p>trace id 不同，但是 packet 具有相同的内容。这是一次重传尝试: 第一个数据包被丢弃，因此 TCP 重试。忽略其余的输出，它不包含新信息。是时候检查chain了。</p>
-<h3 id="规则调查"><a href="#规则调查" class="headerlink" title="规则调查"></a>规则调查</h3><p>前面的部分发现 packet 被丢弃在 inet filter表 中一个名为 “allowed_dnats” 的链中。我们看一下：</p>
+<h3 id="规则调查"><a href="#规则调查" class="headerlink" title="规则调查"></a>规则调查</h3><p>前面的部分发现 packet 被丢弃在 inet filter 表中一个名为 “allowed_dnats” 的链中。我们看一下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># nft list chain inet filter allowed_dnats</span><br><span class="line">table inet filter &#123;</span><br><span class="line"> chain allowed_dnats &#123;</span><br><span class="line">  meta nfproto ipv4 ip daddr . tcp dport @allow_in accept</span><br><span class="line">  drop</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>接受 @allow_in 集中的数据包，在跟踪日志中没看到这样的记录log。再次检查地址是否在@allow_set 中，命令如下:</p>
@@ -242,7 +242,7 @@
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trace id 497abf58 ip postrouting packet: iif &quot;enp0&quot; oif &quot;veth21&quot; ether .. trace id 497abf58 ip postrouting policy accept</span><br></pre></td></tr></table></figure>
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文介绍了如何使用 nftables 跟踪机制检查数据包丢失和其他连接性问题的来源。<br>这是翻译的第一篇。作者还有后续第二篇。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文介绍了如何使用 nftables 跟踪机制检查数据包丢失和其他连接性问题的来源。<br>这是翻译的第一篇。作者还有后续第二篇。<br><a href="https://fedoramagazine.org/network-address-translation-part-1-packet-tracing/" target="_blank" rel="noopener">原文</a></p>
 
         </div>
         <footer class="article-footer">
@@ -250,7 +250,7 @@
 
 
 
-    <a data-url="http://yoursite.com/2021/06/12/NAT-Tracing-Translation/" data-id="ckpuvcl4i001izxse7ypm5wbe" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2021/06/12/NAT-Tracing-Translation/" data-id="ckpw218y7001p0mrid9g27cly" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -339,6 +339,16 @@
         
 <nav id="article-nav">
     
+        <a href="/2021/06/13/NAT-Tracing-Conntrack-Tool-Translation/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            NAT-Tracing-part2(Translation)
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
     
         <a href="/2021/04/15/Network-Tuning/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">older</strong>
@@ -362,7 +372,16 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
-                            <p class="item-title"><a href="/2021/06/12/NAT-Tracing-Translation/" class="title">NAT-Tracing(Translation)</a></p>
+                            <p class="item-title"><a href="/2021/06/13/NAT-Tracing-Conntrack-Tool-Translation/" class="title">NAT-Tracing-part2(Translation)</a></p>
+                            <p class="item-date"><time datetime="2021-06-13T13:57:31.000Z" itemprop="datePublished">2021-06-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2021/06/12/NAT-Tracing-Translation/" class="title">NAT-Tracing-part1(Translation)</a></p>
                             <p class="item-date"><time datetime="2021-06-12T13:50:46.000Z" itemprop="datePublished">2021-06-12</time></p>
                         </div>
                     </li>
@@ -394,15 +413,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
-                            <p class="item-title"><a href="/2020/06/04/ALA_KQL/" class="title">Azure Monitoring KQL Study</a></p>
-                            <p class="item-date"><time datetime="2020-06-04T03:05:42.000Z" itemprop="datePublished">2020-06-04</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -412,7 +422,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Technical-Notes/">Technical Notes</a><span class="category-list-count">15</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Technical-Notes/">Technical Notes</a><span class="category-list-count">16</span></li></ul>
         </div>
     </div>
 
@@ -422,7 +432,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -432,7 +442,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Performance/">Performance</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aliyun/">aliyun</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azure/">azure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Performance/">Performance</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aliyun/">aliyun</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azure/">azure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/">ceph</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a><span class="tag-list-count">2</span></li></ul>
         </div>
     </div>
 
