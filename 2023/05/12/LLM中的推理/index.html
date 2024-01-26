@@ -3,17 +3,24 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>Archive: 2017/5 | Have a Nice Journey</title>
+    <title>大模型中的推理 | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Have a Nice Journey">
-<meta property="og:url" content="http://yoursite.com/archives/2017/05/index.html">
+        <meta name="keywords" content="LLM">
+    
+    <meta name="description" content="大型语言模型（LLM），比如GPT-3，它的”推理”功能可以根据文本提示生成类似人类的回答。 LLM 中推理是什么？推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。 LLM 如何进行推理？首先了解两项技术技术之一是 Self-Attention 自注意力机制。自注意力机制允许模型在生成响应时关注输入文本的 特定 部分。它能够并行计算，而不需要按顺序处理">
+<meta name="keywords" content="LLM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型中的推理">
+<meta property="og:url" content="http://yoursite.com/2023/05/12/LLM中的推理/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="大型语言模型（LLM），比如GPT-3，它的”推理”功能可以根据文本提示生成类似人类的回答。 LLM 中推理是什么？推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。 LLM 如何进行推理？首先了解两项技术技术之一是 Self-Attention 自注意力机制。自注意力机制允许模型在生成响应时关注输入文本的 特定 部分。它能够并行计算，而不需要按顺序处理">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2024-01-26T12:28:25.723Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Have a Nice Journey">
+<meta name="twitter:title" content="大模型中的推理">
+<meta name="twitter:description" content="大型语言模型（LLM），比如GPT-3，它的”推理”功能可以根据文本提示生成类似人类的回答。 LLM 中推理是什么？推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。 LLM 如何进行推理？首先了解两项技术技术之一是 Self-Attention 自注意力机制。自注意力机制允许模型在生成响应时关注输入文本的 特定 部分。它能够并行计算，而不需要按顺序处理">
     
 
     
@@ -120,64 +127,135 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>Archive: 2017/5
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-LLM中的推理" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2017" class="archive-year"><i class="icon fa fa-calendar-o"></i>2017</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a>
-            </div>
-            <div class="date"><time datetime="2017-05-08T16:19:30.000Z" itemprop="datePublished">2017-05-08</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2017/05/08/k8s-network/">k8s_network</a>
+        大模型中的推理
         </h1>
     
 
-        <p class="article-excerpt">
-            k8s网络设计三个层面的网络知识：
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2023/05/12/LLM中的推理/" class="article-date">
+            <time datetime="2023-05-12T12:21:41.000Z" itemprop="datePublished">2023-05-12</time>
+        </a>
+    </div>
 
-docker network
-Third party network
-k8s network
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/LLM/">LLM</a>
+    </div>
 
-Third party network以Calico为例：  
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>大型语言模型（LLM），比如GPT-3，它的”推理”功能可以根据文本提示生成类似人类的回答。</p>
+<h3 id="LLM-中推理是什么？"><a href="#LLM-中推理是什么？" class="headerlink" title="LLM 中推理是什么？"></a>LLM 中推理是什么？</h3><p>推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。</p>
+<h3 id="LLM-如何进行推理？"><a href="#LLM-如何进行推理？" class="headerlink" title="LLM 如何进行推理？"></a>LLM 如何进行推理？</h3><h4 id="首先了解两项技术"><a href="#首先了解两项技术" class="headerlink" title="首先了解两项技术"></a>首先了解两项技术</h4><p>技术之一是 Self-Attention 自注意力机制。<br>自注意力机制允许模型在生成响应时关注输入文本的 <strong>特定</strong> 部分。<br>它能够并行计算，而不需要按顺序处理序列。这使得在推理阶段能够更高效地处理输入，缩短推理时间。<br>有助于模型在推理时捕捉到长距离的依赖关系，有效地处理上下文信息。</p>
+<p>LLM 使用的另一种技术 Transformer Architecture。该结构由Encoder和Decoder两个主要组件构成。<br>Encoder由多个相同的层叠加而成，每一层都包含一个自注意力子层和一个前馈神经网络子层。</p>
+<h4 id="接下来，我们看看gpt3-5是如何看待LLM推理的"><a href="#接下来，我们看看gpt3-5是如何看待LLM推理的" class="headerlink" title="接下来，我们看看gpt3.5是如何看待LLM推理的"></a>接下来，我们看看gpt3.5是如何看待LLM推理的</h4><p>‘’’<br>大型语言模型（LLM，如GPT-3）进行推理的过程主要包含以下步骤:</p>
+<p>输入文本： 推理的起点是给定一个输入文本或提示，这是模型需要处理的信息。</p>
+<p>编码： 输入文本经过模型的编码阶段，其中模型使用预训练好的权重将文本转换为内部表示。对于GPT-3等LLM，这通常涉及将文本中的单词或标记嵌入到向量空间中，以便模型能够理解和处理。</p>
+<p>自注意力机制： LLM中通常使用了自注意力机制。这意味着在编码阶段，模型可以在输入序列中的不同位置之间建立关联，以更好地理解上下文信息。</p>
+<p>生成响应： 经过编码的信息被传递到模型的解码器。在解码阶段，模型使用学到的知识和内部表示生成响应文本。这个生成的文本可以是回答问题、完成任务、翻译等，具体取决于模型的用途和输入提示。</p>
+<p>输出： 模型生成的响应文本作为推理的输出，可以被用作人机对话、文本生成等各种应用。</p>
+<p>需要注意的是，LLM在推理过程中并不是通过精确的逻辑推理来生成响应，而是通过模型在大规模文本数据上学到的统计关系和模式。这种生成式的方法使得LLM在各种任务上表现出色，但也可能导致模型生成不准确或不理想的结果，尤其是在涉及复杂逻辑或专业知识的情况下。<br>‘’’</p>
+<h4 id="为什么推理在-LLM-中很重要？"><a href="#为什么推理在-LLM-中很重要？" class="headerlink" title="为什么推理在 LLM 中很重要？"></a>为什么推理在 LLM 中很重要？</h4><p>因为它能允许模型根据输入文本的上下文生成更相关和更适当的响应。<br>这在诸如语言翻译和自然语言处理(NLP)等任务中特别有用，因为在这些任务中，输入文本的意义可能复杂、表达内容丰富的。</p>
+<p>此外，推理允许 LLM 生成更加类似于人类本质的响应。这在聊天机器人和虚拟助手等应用程序中非常重要，我们可以创建更自然、更直观的用户体验。</p>
 
-Glossary:CNI : Container Network InterfaceCNM : container network model
+        </div>
+        <footer class="article-footer">
+            
 
-The direct routes are set u
-        </p>
+
+
+    <a data-url="http://yoursite.com/2023/05/12/LLM中的推理/" data-id="clrumd1lw0006esqeflg2o2dx" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
 </article>
+
+    <section id="comments">
     
-        </div>
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
     
-
-
-    </div></section>
-
+    </section>
 
 
                         </div>
@@ -190,6 +268,19 @@ The direct routes are set u
             
         </ul>
     </div> -->
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2021/06/13/NAT-Tracing-Conntrack-Tool-Translation/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">NAT-Tracing-part2(Translation)</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
@@ -307,11 +398,13 @@ The direct routes are set u
     var disqus_shortname = 'hexo-theme-hueman';
     
     
+    var disqus_url = 'http://yoursite.com/2023/05/12/LLM中的推理/';
+    
     (function() {
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
     </script>
