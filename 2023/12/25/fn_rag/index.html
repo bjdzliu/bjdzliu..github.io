@@ -3,24 +3,26 @@
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
     
-    <title>INGRESS EXPERIMENT | Have a Nice Journey</title>
+    <title>某销售场景下如何利用LLM | Have a Nice Journey</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="k8s">
+        <meta name="keywords" content="LLM">
     
-    <meta name="description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
-<meta name="keywords" content="k8s">
+    <meta name="description" content="某用户面临如下问题：销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：    对某些术语不了解，需要去查公司内部的知识库 只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来 业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率   一图胜千言、一表胜千语  解决思路： 利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作效率并增">
+<meta name="keywords" content="LLM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="INGRESS EXPERIMENT">
-<meta property="og:url" content="http://yoursite.com/2019/10/29/Ingress_Experiment/index.html">
+<meta property="og:title" content="某销售场景下如何利用LLM">
+<meta property="og:url" content="http://yoursite.com/2023/12/25/fn_rag/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
+<meta property="og:description" content="某用户面临如下问题：销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：    对某些术语不了解，需要去查公司内部的知识库 只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来 业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率   一图胜千言、一表胜千语  解决思路： 利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作效率并增">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/ailab/fn_rag.jpg">
 <meta property="og:updated_time" content="2024-02-01T02:26:01.638Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="INGRESS EXPERIMENT">
-<meta name="twitter:description" content="本文介绍了ingress 实践。 官方文档：地址  创建service创建3个service，实际应用中可能不止这三个。创建ingress  12kubectl create ns ingress-nginx  创建后端服务1，并暴露出端口 123kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --re">
+<meta name="twitter:title" content="某销售场景下如何利用LLM">
+<meta name="twitter:description" content="某用户面临如下问题：销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：    对某些术语不了解，需要去查公司内部的知识库 只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来 业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率   一图胜千言、一表胜千语  解决思路： 利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作效率并增">
+<meta name="twitter:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/ailab/fn_rag.jpg">
     
 
     
@@ -131,14 +133,14 @@
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Ingress_Experiment" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-fn_rag" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        INGRESS EXPERIMENT
+        某销售场景下如何利用LLM
         </h1>
     
 
@@ -148,82 +150,55 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2019/10/29/Ingress_Experiment/" class="article-date">
-            <time datetime="2019-10-29T05:44:59.000Z" itemprop="datePublished">2019-10-29</time>
+        <a href="/2023/12/25/fn_rag/" class="article-date">
+            <time datetime="2023-12-25T12:11:00.000Z" itemprop="datePublished">2023-12-25</time>
         </a>
     </div>
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/k8s/">k8s</a>
+        <a class="tag-link" href="/tags/LLM/">LLM</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>本文介绍了ingress 实践。</p>
-<p>官方文档：<a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank" rel="noopener">地址</a></p>
-<ol>
-<li>创建service<br>创建3个service，实际应用中可能不止这三个。<br>创建ingress</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">kubectl create ns ingress-nginx</span><br></pre></td></tr></table></figure>
-
-<p>创建后端服务1，并暴露出端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run echoheaders --image=gcr.io/google_containers/echoserver:1.4 --replicas=1 --port=8080 -n ingress-nginx</span><br><span class="line">kubectl expose deployment echoheaders --port=80 --target-port=8080 --name=echoheaders-x -n ingress-nginx</span><br><span class="line">//提供default service</span><br></pre></td></tr></table></figure>
-
-<p>创建后端服务2：tomcat service  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl run tomcat --image=tomcat:docs --replicas=1 --port=8080 -n ingress-nginx</span><br><span class="line">kubectl expose deployment tomcat --port=80 --target-port=8080 --name=tomcat-x -n ingress-nginx  </span><br><span class="line"></span><br><span class="line">//自制镜像tomcat:docs，将webapps.list中的应用（ROOT  docs  examples  host-manager  manager）都copy到webapps中</span><br></pre></td></tr></table></figure>
-
-<p>创建后端服务3：nginx service</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx --image=nginx --replicas=1 --port=80 -n ingress-nginx</span><br><span class="line">kubectl expose deployment nginx  --port=80 --target-port=80 --name=nginx-x -n ingress-nginx</span><br><span class="line">//代表其他服务</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>创建ingress rule<br>ingress rule 可以有多个，创建后，不需要重启nginx-controller。  </p>
+            <h3 id="某用户面临如下问题："><a href="#某用户面临如下问题：" class="headerlink" title="某用户面临如下问题："></a>某用户面临如下问题：</h3><p>销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：  </p>
 <ul>
-<li>controller怎么识别到ingress rule?<br>controller的启动参数默认指定class 为ingress。同时如果没有class的ingress rule，也会由controler负责使其生效。通过这种方式，可以实现多个controller对应实现不同的insgress rule。<br>我们依次创建2个rule:<br>RULE-1:  </li>
+<li>对某些术语不了解，需要去查公司内部的知识库</li>
+<li>只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来</li>
+<li>业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率  </li>
+<li>一图胜千言、一表胜千语</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: tomcat-root-ingress</span><br><span class="line">  annotations:</span><br><span class="line">    ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: tomcat-x</span><br><span class="line">          servicePort: 80</span><br></pre></td></tr></table></figure>
-
-<p>域名：<a href="http://192.168.37.112/" target="_blank" rel="noopener">http://192.168.37.112/</a><br>根路径访问，转发到 tomcat-x 服务的ROOT应用。<br>针对 / , nginx-controller自动配置了https转发：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if ($redirect_to_https) &#123;</span><br><span class="line"></span><br><span class="line">      return 308 https://$best_http_host$request_uri;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>RULE-2:  </p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: extensions/v1beta1</span><br><span class="line">kind: Ingress</span><br><span class="line">metadata:</span><br><span class="line">  name: tomcat-ingress</span><br><span class="line">  namespace: ingress-nginx</span><br><span class="line">  annotations:</span><br><span class="line">    ingress.kubernetes.io/rewrite-target: /</span><br><span class="line">spec:</span><br><span class="line">  rules:</span><br><span class="line">  - http:</span><br><span class="line">      paths:</span><br><span class="line">      - path: /docs</span><br><span class="line">        backend:</span><br><span class="line">          serviceName: tomcat-x</span><br><span class="line">          servicePort: 80</span><br><span class="line">    host: tomcat.bar.com</span><br></pre></td></tr></table></figure>
-
-<p>  域名：tomcat.bar.com<br>  路径： /docs<br>  转发到tomcat-x的docs应用里。</p>
-<ol start="3">
-<li><p>创建 nginx-controller  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/kubernetes/ingress-nginx/blob/nginx-0.20.0/deploy/with-rbac.yaml</span><br><span class="line">kubectl apply -f with-rbac.yaml</span><br></pre></td></tr></table></figure>
-
-<p>注：执行前，手工修改with-rbac.yaml,</p>
+<h3 id="解决思路："><a href="#解决思路：" class="headerlink" title="解决思路："></a>解决思路：</h3><ol>
+<li><p>利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作效率并增加自主权。  </p>
 <ul>
-<li><p>添加hostNetwork: true。<br>为了本次测试，nginx-controller在一台node节点上启动，并对外提供服务。生产上一般准备3个node对外服务，或者前面放一个svc绑定slb。</p>
-</li>
-<li><p>设置默认的default service，专门处理ingress rule没有匹配的情况。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- --default-backend-service=$(POD_NAMESPACE)/echoheaders-x</span><br></pre></td></tr></table></figure>
-</li>
+<li>实现一个智能对话系统，通过自然语言处理，销售人员可以直接提问系统，快速获取需要的信息，避免繁琐的手动检索流程。</li>
 </ul>
 </li>
-<li><p>效果<br>本地电脑绑定tomcat.bar.com解析到vm ip 192.168.37.112。  </p>
+<li><p>提供对接其他业务系统的能力，包括知识库。  </p>
 <ul>
-<li><p>访问 <a href="http://tomcat.bar.com/docs" target="_blank" rel="noopener">http://tomcat.bar.com/docs</a> — ok 仍旧是http</p>
-</li>
-<li><p>访问 <a href="http://tomcat.bar.com/fakeserver" target="_blank" rel="noopener">http://tomcat.bar.com/fakeserver</a> — 返回 default backend - 404</p>
-</li>
-<li><p>访问 <a href="http://192.168.37.112/" target="_blank" rel="noopener">http://192.168.37.112/</a> —redirect_to_http–&gt; <a href="https://192.168.37.112/" target="_blank" rel="noopener">https://192.168.37.112/</a></p>
-<ul>
-<li>证书是nginx-controller中配置的  <em>default-fake-certificate.pem</em></li>
+<li>集成各个业务系统，使销售人员能够在一个平台上访问不同系统的数据，同时整合公司内部知识库，解决术语不了解的问题。</li>
 </ul>
 </li>
-<li><p>访问 <a href="https://192.168.37.112/asdasd" target="_blank" rel="noopener">https://192.168.37.112/asdasd</a> – Tomcat返回404</p>
+<li><p>帮助销售团队快速生成客户业务往来报告，省却繁琐步骤。  </p>
+<ul>
+<li>设计一个简化报告生成流程的工具，销售人员只需输入关键信息，系统即可自动生成符合需求的客户业务报告，提高效率</li>
+</ul>
 </li>
+<li><p>通过直观的可视化报表，全面了解客户在我司的采购金额、数量等多维度情况，为决策提供更清晰的参考。  </p>
+<ul>
+<li>引入直观的可视化仪表板，以图形化方式展示客户采购情况，帮助销售人员更快速、全面地理解数据，从而支持更明智的决策。</li>
 </ul>
 </li>
 </ol>
+<h3 id="梳理客户业务主线"><a href="#梳理客户业务主线" class="headerlink" title="梳理客户业务主线"></a>梳理客户业务主线</h3><p>目的是找出哪里可以提高效率、提高体验、关键决策制定、切入点、实验数据</p>
+<h3 id="计划和方案确定"><a href="#计划和方案确定" class="headerlink" title="计划和方案确定"></a>计划和方案确定</h3><p>Done</p>
+<h3 id="和-LLM-相关时序图"><a href="#和-LLM-相关时序图" class="headerlink" title="和 LLM 相关时序图"></a>和 LLM 相关时序图</h3><p><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/ailab/fn_rag.jpg" alt="func_rag"></p>
+<h4 id="选择-Functon-Calling-的目的"><a href="#选择-Functon-Calling-的目的" class="headerlink" title="选择 Functon Calling 的目的"></a>选择 Functon Calling 的目的</h4><p>在以往的 prompting 中，LLM虽然表现了一定的逻辑推理能力，但是它的逻辑比较弱的，多轮对话，也比较耗token。<br>像思维链、思维树和自洽性等方法，能提高准确度，逻辑能力也就到天花板了。<br>所以引入自己公司内部已有的逻辑系统是必要的，不用重新建设，直接使用就可以</p>
+<h4 id="选择-RAG-的目的"><a href="#选择-RAG-的目的" class="headerlink" title="选择 RAG 的目的"></a>选择 RAG 的目的</h4><p>LLM的通用能力是足够的、垂直领域的能力基本先用 RAG 实现。<br>用函数的方式，也比较适合有多个向量数据库的情形，让LLM告诉应用，去哪个库查询。<br>而且还可以调用业务数据库，这块也能体现NLUtoSQL的能力</p>
 
         </div>
         <footer class="article-footer">
@@ -231,7 +206,7 @@
 
 
 
-    <a data-url="http://yoursite.com/2019/10/29/Ingress_Experiment/" data-id="cls2lhgr30006d6ov9zg9mimy" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2023/12/25/fn_rag/" data-id="cls2lhgrg000nd6ov4wd8tptd" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -320,20 +295,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2019/11/08/linux_shell/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
-        <p class="article-nav-title">
-        
-            Linux’ Shell 编程题
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/08/20/aliyun-summary2/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2023/07/01/Attention/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">aliyun_summary2</p>
+        <p class="article-nav-title">自注意力机制做了什么？</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -456,7 +421,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'http://yoursite.com/2019/10/29/Ingress_Experiment/';
+    var disqus_url = 'http://yoursite.com/2023/12/25/fn_rag/';
     
     (function() {
     var dsq = document.createElement('script');
