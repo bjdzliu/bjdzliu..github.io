@@ -18,7 +18,7 @@
 <meta property="og:description" content="训练模型时什么消耗了所有内存？  model weights gradients optimizer states forward activations saved for gradient computation temporary buffers functionality-specific memory refer to model_memory_anatomy  以 meta-llama">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-07-14T19:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:08:04.143Z">
+<meta property="article:modified_time" content="2025-01-23T12:15:47.308Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary">
@@ -257,14 +257,17 @@ Adam 等优化器计算梯度时所需要的，因此会占用额外的内存。
 不太理解数值怎么计算的。7b模型内存消耗也就是14G，24G里面应该还加了其他占用。</p>
 <p>Total=24+49+49=122G</p>
 <h3 id="本地计算">本地计算</h3>
-<p>从两个角度计算： - 模型占用的内存 - 激活内存 *
-指用于存储每一层的激活值（即中间计算结果）的内存 * 每一层的激活值是在
-<strong>前向传播（Forward
+<p>从两个角度计算： - 模型占用的内存<br />
+- 激活内存<br />
+* 指用于存储每一层的激活值（即中间计算结果）的内存<br />
+* 每一层的激活值是在 <strong>前向传播（Forward
 Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）</strong>
 中被用来计算梯度。</p>
 <h4 id="模型占用的内存">模型占用的内存</h4>
-<p>Model States ≈ (2+4+8)x7=98G - mode size 2x7=14G - 梯度内存 4x7=28G -
-优化器状态内存 8x7=56G</p>
+<p>Model States ≈ (2+4+8)x7=98G<br />
+- mode size 2x7=14G<br />
+- 梯度内存 4x7=28G<br />
+- 优化器状态内存 8x7=56G</p>
 <p><strong>梯度</strong> 通常还是保留在 float32
 精度上，因为梯度值可能会具有较大的动态范围，所以是4x7</p>
 <h4 id="激活内存">激活内存</h4>
@@ -297,7 +300,7 @@ Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）
 
 
 
-    <a data-url="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/" data-id="cm69aiokt000933pae41u3dp2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/" data-id="cm69atvz4000901ow8939emxt" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
