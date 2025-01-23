@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    
+    <title>估算GPU内存 | Have a Nice Journey</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="LLM" />
+    
+    <meta name="description" content="训练模型时什么消耗了所有内存？  model weights gradients optimizer states forward activations saved for gradient computation temporary buffers functionality-specific memory refer to model_memory_anatomy  以 meta-llama">
+<meta property="og:type" content="article">
+<meta property="og:title" content="估算GPU内存">
+<meta property="og:url" content="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/index.html">
+<meta property="og:site_name" content="Have a Nice Journey">
+<meta property="og:description" content="训练模型时什么消耗了所有内存？  model weights gradients optimizer states forward activations saved for gradient computation temporary buffers functionality-specific memory refer to model_memory_anatomy  以 meta-llama">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-14T19:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-23T12:08:04.143Z">
+<meta property="article:author" content="bjdzliu">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/titillium-web/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+<script src="/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/Technical-Notes/">Technical Notes</a></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="/about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/Technical-Notes/">Technical Notes</a>
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Estimating-GPU-Memory" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        估算GPU内存
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2024/07/14/Estimating-GPU-Memory/" class="article-date">
+            <time datetime="2024-07-14T19:00:00.000Z" itemprop="datePublished">2024-07-14</time>
+        </a>
+    </div>
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/LLM/" rel="tag">LLM</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h3
+id="训练模型时什么消耗了所有内存">训练模型时什么消耗了所有内存？</h3>
+<ul>
+<li>model weights</li>
+<li>gradients</li>
+<li>optimizer states</li>
+<li>forward activations saved for gradient computation</li>
+<li>temporary buffers</li>
+<li>functionality-specific memory refer to <a
+target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/model_memory_anatomy">model_memory_anatomy</a></li>
+</ul>
+<p>以 <strong>meta-llama/Llama-2-7b</strong>
+为例，用在线工具和本地计算的方式算一算</p>
+<h3 id="利用huggingface-tool计算">利用Huggingface tool计算</h3>
+<p><a
+target="_blank" rel="noopener" href="https://huggingface.co/spaces/hf-accelerate/model-memory-usage">模型内存计算器</a>
+- 基于batchsize=1 - 结论：工具给出了优化器需要的内存，至少是推理内存x4
+因为用像 Adam 这样的优化器进行训练时，会使用额外的内存来存储模型的
+动量（momentum） 和 二阶矩估计（second moment estimate）。这些信息是
+Adam 等优化器计算梯度时所需要的，因此会占用额外的内存。</p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 33%" />
+<col style="width: 11%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>dtype</th>
+<th>Largest Layer or Residual Group</th>
+<th>Total Size</th>
+<th>Training using Adam (Peak vRAM)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>float16/bfloat16</td>
+<td>388.02 MB</td>
+<td>12.37 GB</td>
+<td>49.48 GB</td>
+</tr>
+</tbody>
+</table>
+<p>49.48 GB：这表示当使用 Adam 优化器进行训练时，对显存峰值需求。</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 21%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>dtype</th>
+<th>Model</th>
+<th>Gradient calculation</th>
+<th>Backward pass</th>
+<th>Optimizer step</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>float16/bfloat16</td>
+<td>24.74 GB</td>
+<td>37.11 GB</td>
+<td>49.48 GB</td>
+<td>49.48 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Backward pass
+反向传播的总内存消耗就是激活值的内存消耗和梯度的内存消耗之和 Model=24.74
+不太理解数值怎么计算的。7b模型内存消耗也就是14G，24G里面应该还加了其他占用。</p>
+<p>Total=24+49+49=122G</p>
+<h3 id="本地计算">本地计算</h3>
+<p>从两个角度计算： - 模型占用的内存 - 激活内存 *
+指用于存储每一层的激活值（即中间计算结果）的内存 * 每一层的激活值是在
+<strong>前向传播（Forward
+Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）</strong>
+中被用来计算梯度。</p>
+<h4 id="模型占用的内存">模型占用的内存</h4>
+<p>Model States ≈ (2+4+8)x7=98G - mode size 2x7=14G - 梯度内存 4x7=28G -
+优化器状态内存 8x7=56G</p>
+<p><strong>梯度</strong> 通常还是保留在 float32
+精度上，因为梯度值可能会具有较大的动态范围，所以是4x7</p>
+<h4 id="激活内存">激活内存</h4>
+<p>Activations激活内存 ≈ 2.1G</p>
+<p>Activations激活内存大小取决于许多因素，其中关键因素包括序列长度、隐藏大小和批量大小，用这些参数做一个python计算：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_memory</span>(<span class="params">sequence_length, hidden_size, batch_size, dtype=torch.float32, num_layers=<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Calculate the memory usage for activations of a neural network during forward pass.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Parameters:</span></span><br><span class="line"><span class="string">    - sequence_length: Length of the input sequence (e.g., number of words in a sentence).</span></span><br><span class="line"><span class="string">    - hidden_size: Size of the hidden layer (e.g., the dimensionality of the embeddings).</span></span><br><span class="line"><span class="string">    - batch_size: Number of sequences processed in parallel (batch size).</span></span><br><span class="line"><span class="string">    - dtype: Data type of the model weights (default is float32, can be changed to float16 for lower precision).</span></span><br><span class="line"><span class="string">    - num_layers: Number of layers in the network (default is 1 for a simple network).</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - memory_in_GB: Memory used for activations in gigabytes (GB).</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Calculate the size of one activation (batch_size, sequence_length, hidden_size)</span></span><br><span class="line">    num_elements_per_layer = batch_size * sequence_length * hidden_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># If there are multiple layers, the activations will be stored for each layer</span></span><br><span class="line">    total_elements = num_elements_per_layer * num_layers</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Memory usage in bytes: num_elements * size of each element (in bytes)</span></span><br><span class="line">    element_size = torch.tensor(<span class="number">0</span>, dtype=dtype).element_size()  <span class="comment"># Get the size of each element in bytes</span></span><br><span class="line">    </span><br><span class="line">    total_memory_bytes = total_elements * element_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Convert bytes to gigabytes (1 GB = 1e9 bytes)</span></span><br><span class="line">    memory_in_GB = total_memory_bytes / <span class="number">1e9</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> memory_in_GB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Total = Model States Activations = 大约100G</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>精度</strong></th>
+<th><strong>字节</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>float32</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>float16</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/" data-id="cm69aiokt000933pae41u3dp2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+<!--    <div class="sidebar-top">
+        <p>follow:</p> 
+        <ul class="social-links">
+            
+        </ul>
+    </div> -->
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2024/07/15/Agent-Tuning/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Agent-Tuning
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2024/02/20/fine_tune_part1/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">总结Fine-Tune ChatGLM3的过程part-1</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2024/07/15/Agent-Tuning/" class="title">Agent-Tuning</a></p>
+                            <p class="item-date"><time datetime="2024-07-15T20:33:00.000Z" itemprop="datePublished">2024-07-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2024/07/14/Estimating-GPU-Memory/" class="title">估算GPU内存</a></p>
+                            <p class="item-date"><time datetime="2024-07-14T19:00:00.000Z" itemprop="datePublished">2024-07-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2024/02/20/fine_tune_part1/" class="title">总结Fine-Tune ChatGLM3的过程part-1</a></p>
+                            <p class="item-date"><time datetime="2024-02-20T14:11:00.000Z" itemprop="datePublished">2024-02-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2023/12/25/fn_rag/" class="title">某销售场景下如何利用LLM</a></p>
+                            <p class="item-date"><time datetime="2023-12-25T12:11:00.000Z" itemprop="datePublished">2023-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Technical-Notes/">Technical Notes</a></p>
+                            <p class="item-title"><a href="/2023/07/01/Attention/" class="title">自注意力机制做了什么？</a></p>
+                            <p class="item-date"><time datetime="2023-07-01T16:22:00.000Z" itemprop="datePublished">2023-07-01</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Technical-Notes/">Technical Notes</a><span class="category-list-count">23</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/12/">December 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">July 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">June 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/05/">May 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Performance/" rel="tag">Performance</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aliyun/" rel="tag">aliyun</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azure/" rel="tag">azure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/" rel="tag">ceph</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a><span class="tag-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2025 bjdzliu</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://yoursite.com/2024/07/14/Estimating-GPU-Memory/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML.js"></script>
+
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
