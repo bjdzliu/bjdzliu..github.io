@@ -174,20 +174,14 @@
     
 
         <p class="article-excerpt">
-            现象：
-从监控软件上查看jvm堆区使用 
-非堆区， 
-metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill
+            现象：从监控软件上查看jvm堆区使用
+非堆区，
+metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill
 pod重新拉起一个新的容器
 概念：
-
-
-JVM-1.8 内存模型
-
 Metaspace 直接在OS上分配的内存。
 Metaspace 存放的是加载的class
-加载class的
+加载class的过程是由class loader完成。
         </p>
     </div>
 </article>
@@ -226,9 +220,8 @@ Metaspace 存放的是加载的class
     
 
         <p class="article-excerpt">
-            问题1：
-使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为：
-123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlg
+            问题1：使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为：
+123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlgm
         </p>
     </div>
 </article>
@@ -267,15 +260,8 @@ Metaspace 存放的是加载的class
     
 
         <p class="article-excerpt">
-            Linux Bridge and Virtual
-Networking
-学习linux网卡知识时遇到的一篇文章，非常基础。
-原文
-看到13年的文章，有点感慨学习的有些晚了
-Linux Bridge 和 虚拟网络
-软件定义网络 (SDN) 当前正席卷网络产业。SDN
-的关键功能之一就是网络虚拟化。sdn和网络虚拟化在当前已经是潮流，但他们并不是什么新的技术，Linux
-bridge才是这个领域的最早
+            Linux Bridge and Virtual Networking学习linux网卡知识时遇到的一篇文章，非常基础。  
+原文看到13年的文章，有点感慨学习的有些晚了Linux Bridge 和 虚拟网络软件定义网络 (SDN) 当前正席卷网络产业。SDN 的关键功能之一就是网络虚拟化。sdn和网络虚拟化在当前已经是潮流，但他们并不是什么新的技术，Linux bridge才是这个领域的最早实践
         </p>
     </div>
 </article>

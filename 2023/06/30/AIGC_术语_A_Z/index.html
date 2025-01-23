@@ -10,15 +10,15 @@
     
         <meta name="keywords" content="LLM" />
     
-    <meta name="description" content="想快速学习 Generative AI , 先收集一下这些术语 A auto-regressive model 自回归模型 一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。 相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是">
+    <meta name="description" content="想快速学习 Generative AI , 先收集一下这些术语 Aauto-regressive model自回归模型一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。 相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是，某些">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AGI_Glossary术语">
 <meta property="og:url" content="http://yoursite.com/2023/06/30/AIGC_%E6%9C%AF%E8%AF%AD_A_Z/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="想快速学习 Generative AI , 先收集一下这些术语 A auto-regressive model 自回归模型 一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。 相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是">
+<meta property="og:description" content="想快速学习 Generative AI , 先收集一下这些术语 Aauto-regressive model自回归模型一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。 相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是，某些">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-30T11:33:00.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.880Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.798Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary">
@@ -181,38 +181,24 @@
         
         <div class="article-entry" itemprop="articleBody">
             <p>想快速学习 Generative AI , 先收集一下这些术语</p>
-<h3 id="a">A</h3>
-<h3 id="auto-regressive-model">auto-regressive model</h3>
-<p>自回归模型
-一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于
-Transformer 的大型语言模型都是自回归的。</p>
-<p>相比之下，基于 GAN
-的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是，某些图像生成模型是自动回归的，因为它们按步骤生成图像。</p>
-<h3 id="c">C</h3>
-<h3 id="chain-of-thought-prompting">chain-of-thought prompting</h3>
-<p>思维链对话，简写COT
-一种提示工程技术，鼓励大型语言模型(LLM)逐步解释其推理过程。例如，考虑下面的提示，特别注意第二句话:</p>
+<h3 id="A"><a href="#A" class="headerlink" title="A"></a>A</h3><h3 id="auto-regressive-model"><a href="#auto-regressive-model" class="headerlink" title="auto-regressive model"></a>auto-regressive model</h3><p>自回归模型<br>一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。</p>
+<p>相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是，某些图像生成模型是自动回归的，因为它们按步骤生成图像。</p>
+<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><h3 id="chain-of-thought-prompting"><a href="#chain-of-thought-prompting" class="headerlink" title="chain-of-thought prompting"></a>chain-of-thought prompting</h3><p>思维链对话，简写COT<br>一种提示工程技术，鼓励大型语言模型(LLM)逐步解释其推理过程。例如，考虑下面的提示，特别注意第二句话:  </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果一辆车在7秒内从0加速到60英里每小时，司机会受到多少重力的作用？在答案中，显示所有相关的计算结果。</span><br></pre></td></tr></table></figure>
-<p>LLM 的反应可能是: - 显示一系列物理公式，在适当的位置插入值0、60和7。
-- 解释为什么它选择这些公式和各种变量的含义。</p>
-<h3 id="d">D</h3>
-<h3 id="direct-prompting">direct prompting</h3>
-<p>同 zero-shot prompting.</p>
-<h3 id="distillation">distillation</h3>
-<p>中文翻译 蒸馏
-将一个模型(称为“teacher”)缩小为一个较小的模型(称为“student”)的过程，该模型尽可能忠实地模拟原始模型的预测。
-distillation 是有用的，因为较小的模型比较大的模型(老师)有两个关键的好处:
-- 更快的推理时间 - 减少能耗</p>
-<h3 id="f">F</h3>
-<h3 id="few-shot-prompting">few-shot prompting</h3>
-<p>Prompt Engineering （提示词工程）的一种方式。<br />
-包含若干个提示词。看例子 | Parts of one prompt | Notes |
-|--------|-----| | What is the official currency of the specified
-country? | The question you want the LLM to answer.| | BobFrance: EUR |
-One example.| | United Kingdom: GBP | Another example. | | India: |
-查询语句 |</p>
-<p>Few-shot prompting比 zero-shot prompting 和 one-shot
-prompting的结果理想些，但是提示词需要的更长。</p>
+
+<p>LLM 的反应可能是: </p>
+<ul>
+<li>显示一系列物理公式，在适当的位置插入值0、60和7。</li>
+<li>解释为什么它选择这些公式和各种变量的含义。</li>
+</ul>
+<h3 id="D"><a href="#D" class="headerlink" title="D"></a>D</h3><h3 id="direct-prompting"><a href="#direct-prompting" class="headerlink" title="direct prompting"></a>direct prompting</h3><p>同 zero-shot prompting.</p>
+<h3 id="distillation"><a href="#distillation" class="headerlink" title="distillation"></a>distillation</h3><p>中文翻译 蒸馏<br>将一个模型(称为“teacher”)缩小为一个较小的模型(称为“student”)的过程，该模型尽可能忠实地模拟原始模型的预测。<br>distillation 是有用的，因为较小的模型比较大的模型(老师)有两个关键的好处:</p>
+<ul>
+<li>更快的推理时间</li>
+<li>减少能耗</li>
+</ul>
+<h3 id="F"><a href="#F" class="headerlink" title="F"></a>F</h3><h3 id="few-shot-prompting"><a href="#few-shot-prompting" class="headerlink" title="few-shot prompting"></a>few-shot prompting</h3><p>Prompt Engineering （提示词工程）的一种方式。<br>包含若干个提示词。看例子<br>| Parts of one prompt   | Notes |<br>|——–|—–|<br>| What is the official currency of the specified country?  | The question you want the LLM to answer.|<br>| BobFrance: EUR        | One example.|<br>| United Kingdom: GBP  | Another example.  |<br>| India:  | 查询语句  | </p>
+<p>Few-shot prompting比 zero-shot prompting 和 one-shot prompting的结果理想些，但是提示词需要的更长。</p>
 
         </div>
         <footer class="article-footer">
@@ -220,7 +206,7 @@ prompting的结果理想些，但是提示词需要的更长。</p>
 
 
 
-    <a data-url="http://yoursite.com/2023/06/30/AIGC_%E6%9C%AF%E8%AF%AD_A_Z/" data-id="cm69b077x0001zgqegbkr7dz1" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2023/06/30/AIGC_%E6%9C%AF%E8%AF%AD_A_Z/" data-id="cm69ca08t0001ybp571c46lsb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

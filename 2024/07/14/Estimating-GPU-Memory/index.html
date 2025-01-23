@@ -10,15 +10,15 @@
     
         <meta name="keywords" content="LLM" />
     
-    <meta name="description" content="训练模型时什么消耗了所有内存？  model weights gradients optimizer states forward activations saved for gradient computation temporary buffers functionality-specific memory refer to model_memory_anatomy  以 meta-llama">
+    <meta name="description" content="训练模型时什么消耗了所有内存？ model weights  gradients  optimizer states  forward activations saved for gradient computation temporary buffers functionality-specific memoryrefer to model_memory_anatomy  以 meta-llam">
 <meta property="og:type" content="article">
 <meta property="og:title" content="估算GPU内存">
 <meta property="og:url" content="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="训练模型时什么消耗了所有内存？  model weights gradients optimizer states forward activations saved for gradient computation temporary buffers functionality-specific memory refer to model_memory_anatomy  以 meta-llama">
+<meta property="og:description" content="训练模型时什么消耗了所有内存？ model weights  gradients  optimizer states  forward activations saved for gradient computation temporary buffers functionality-specific memoryrefer to model_memory_anatomy  以 meta-llam">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-07-14T19:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.880Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.799Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary">
@@ -180,62 +180,40 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3
-id="训练模型时什么消耗了所有内存">训练模型时什么消耗了所有内存？</h3>
-<ul>
-<li>model weights</li>
-<li>gradients</li>
-<li>optimizer states</li>
+            <h3 id="训练模型时什么消耗了所有内存？"><a href="#训练模型时什么消耗了所有内存？" class="headerlink" title="训练模型时什么消耗了所有内存？"></a>训练模型时什么消耗了所有内存？</h3><ul>
+<li>model weights </li>
+<li>gradients </li>
+<li>optimizer states </li>
 <li>forward activations saved for gradient computation</li>
 <li>temporary buffers</li>
-<li>functionality-specific memory refer to <a
-target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/model_memory_anatomy">model_memory_anatomy</a></li>
+<li>functionality-specific memory<br>refer to <a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/model_memory_anatomy">model_memory_anatomy</a></li>
 </ul>
-<p>以 <strong>meta-llama/Llama-2-7b</strong>
-为例，用在线工具和本地计算的方式算一算</p>
-<h3 id="利用huggingface-tool计算">利用Huggingface tool计算</h3>
-<p><a
-target="_blank" rel="noopener" href="https://huggingface.co/spaces/hf-accelerate/model-memory-usage">模型内存计算器</a><br />
-- 基于batchsize=1<br />
-- 结论：工具给出了优化器需要的内存，至少是推理内存x4<br />
-因为用像 Adam 这样的优化器进行训练时，会使用额外的内存来存储模型的
-动量（momentum） 和 二阶矩估计（second moment estimate）。这些信息是
-Adam 等优化器计算梯度时所需要的，因此会占用额外的内存。</p>
+<p>以 <strong>meta-llama/Llama-2-7b</strong> 为例，用在线工具和本地计算的方式算一算</p>
+<h3 id="利用Huggingface-tool计算"><a href="#利用Huggingface-tool计算" class="headerlink" title="利用Huggingface tool计算"></a>利用Huggingface tool计算</h3><p><a target="_blank" rel="noopener" href="https://huggingface.co/spaces/hf-accelerate/model-memory-usage">模型内存计算器</a>  </p>
+<ul>
+<li>基于batchsize=1  </li>
+<li>结论：工具给出了优化器需要的内存，至少是推理内存x4<br>因为用像 Adam 这样的优化器进行训练时，会使用额外的内存来存储模型的 动量（momentum） 和 二阶矩估计（second moment estimate）。这些信息是 Adam 等优化器计算梯度时所需要的，因此会占用额外的内存。  </li>
+</ul>
 <table>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 33%" />
-<col style="width: 11%" />
-<col style="width: 32%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>dtype</th>
 <th>Largest Layer or Residual Group</th>
 <th>Total Size</th>
 <th>Training using Adam (Peak vRAM)</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>float16/bfloat16</td>
 <td>388.02 MB</td>
 <td>12.37 GB</td>
 <td>49.48 GB</td>
 </tr>
-</tbody>
-</table>
-<p>49.48 GB：这表示当使用 Adam 优化器进行训练时，对显存峰值需求。</p>
+</tbody></table>
+<p> 49.48 GB：这表示当使用 Adam 优化器进行训练时，对显存峰值需求。</p>
 <table>
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 21%" />
-<col style="width: 24%" />
-<col style="width: 16%" />
-<col style="width: 17%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>dtype</th>
 <th>Model</th>
 <th>Gradient calculation</th>
@@ -243,58 +221,53 @@ Adam 等优化器计算梯度时所需要的，因此会占用额外的内存。
 <th>Optimizer step</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>float16/bfloat16</td>
 <td>24.74 GB</td>
 <td>37.11 GB</td>
 <td>49.48 GB</td>
 <td>49.48 GB</td>
 </tr>
-</tbody>
-</table>
-<p>Backward pass
-反向传播的总内存消耗就是激活值的内存消耗和梯度的内存消耗之和 Model=24.74
-不太理解数值怎么计算的。7b模型内存消耗也就是14G，24G里面应该还加了其他占用。</p>
+</tbody></table>
+<p>Backward pass 反向传播的总内存消耗就是激活值的内存消耗和梯度的内存消耗之和<br>Model=24.74 不太理解数值怎么计算的。7b模型内存消耗也就是14G，24G里面应该还加了其他占用。</p>
 <p>Total=24+49+49=122G</p>
-<h3 id="本地计算">本地计算</h3>
-<p>从两个角度计算：<br />
-- 模型占用的内存<br />
-- 激活内存<br />
-* 指用于存储每一层的激活值（即中间计算结果）的内存<br />
-* 每一层的激活值是在 <strong>前向传播（Forward
-Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）</strong>
-中被用来计算梯度。</p>
-<h4 id="模型占用的内存">模型占用的内存</h4>
-<p>Model States ≈ (2+4+8)x7=98G<br />
-- mode size 2x7=14G<br />
-- 梯度内存 4x7=28G<br />
-- 优化器状态内存 8x7=56G</p>
-<p><strong>梯度</strong> 通常还是保留在 float32
-精度上，因为梯度值可能会具有较大的动态范围，所以是4x7</p>
-<h4 id="激活内存">激活内存</h4>
-<p>Activations激活内存 ≈ 2.1G</p>
+<h3 id="本地计算"><a href="#本地计算" class="headerlink" title="本地计算"></a>本地计算</h3><p>从两个角度计算：  </p>
+<ul>
+<li>模型占用的内存  </li>
+<li>激活内存  <ul>
+<li>指用于存储每一层的激活值（即中间计算结果）的内存  </li>
+<li>每一层的激活值是在 <strong>前向传播（Forward Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）</strong> 中被用来计算梯度。  </li>
+</ul>
+</li>
+</ul>
+<h4 id="模型占用的内存"><a href="#模型占用的内存" class="headerlink" title="模型占用的内存"></a>模型占用的内存</h4><p>Model States ≈ (2+4+8)x7=98G  </p>
+<ul>
+<li>mode size 2x7=14G  </li>
+<li>梯度内存 4x7=28G  </li>
+<li>优化器状态内存 8x7=56G  </li>
+</ul>
+<p><strong>梯度</strong> 通常还是保留在 float32 精度上，因为梯度值可能会具有较大的动态范围，所以是4x7</p>
+<h4 id="激活内存"><a href="#激活内存" class="headerlink" title="激活内存"></a>激活内存</h4><p>Activations激活内存 ≈ 2.1G</p>
 <p>Activations激活内存大小取决于许多因素，其中关键因素包括序列长度、隐藏大小和批量大小，用这些参数做一个python计算：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_memory</span>(<span class="params">sequence_length, hidden_size, batch_size, dtype=torch.float32, num_layers=<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Calculate the memory usage for activations of a neural network during forward pass.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Parameters:</span></span><br><span class="line"><span class="string">    - sequence_length: Length of the input sequence (e.g., number of words in a sentence).</span></span><br><span class="line"><span class="string">    - hidden_size: Size of the hidden layer (e.g., the dimensionality of the embeddings).</span></span><br><span class="line"><span class="string">    - batch_size: Number of sequences processed in parallel (batch size).</span></span><br><span class="line"><span class="string">    - dtype: Data type of the model weights (default is float32, can be changed to float16 for lower precision).</span></span><br><span class="line"><span class="string">    - num_layers: Number of layers in the network (default is 1 for a simple network).</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - memory_in_GB: Memory used for activations in gigabytes (GB).</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># Calculate the size of one activation (batch_size, sequence_length, hidden_size)</span></span><br><span class="line">    num_elements_per_layer = batch_size * sequence_length * hidden_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># If there are multiple layers, the activations will be stored for each layer</span></span><br><span class="line">    total_elements = num_elements_per_layer * num_layers</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Memory usage in bytes: num_elements * size of each element (in bytes)</span></span><br><span class="line">    element_size = torch.tensor(<span class="number">0</span>, dtype=dtype).element_size()  <span class="comment"># Get the size of each element in bytes</span></span><br><span class="line">    </span><br><span class="line">    total_memory_bytes = total_elements * element_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Convert bytes to gigabytes (1 GB = 1e9 bytes)</span></span><br><span class="line">    memory_in_GB = total_memory_bytes / <span class="number">1e9</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> memory_in_GB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <p>Total = Model States Activations = 大约100G</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>精度</strong></th>
 <th><strong>字节</strong></th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>float32</td>
 <td>4</td>
 </tr>
-<tr class="even">
+<tr>
 <td>float16</td>
 <td>2</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 
         </div>
         <footer class="article-footer">
@@ -302,7 +275,7 @@ Pass）时计算并存储的，这些激活值在反向传播（Backward Pass）
 
 
 
-    <a data-url="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/" data-id="cm69b07830009zgqegm569hg2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2024/07/14/Estimating-GPU-Memory/" data-id="cm69ca0910009ybp5g34b1oqz" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

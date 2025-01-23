@@ -174,11 +174,8 @@
     
 
         <p class="article-excerpt">
-            介绍
-NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。
-NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。
-定位这类问题的方法：判断请求和预期得到的地址是否一致。
-连接跟踪(Connection tracki
+            介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。
+连接跟踪(Connection tracking）
         </p>
     </div>
 </article>
@@ -205,8 +202,7 @@ NAT失效即意味请求失败。同样的情况也发生在：暴露了错误�
     
 
         <p class="article-excerpt">
-            数据如何从网卡到应用
-123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----
+            数据如何从网卡到应用123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----&
         </p>
     </div>
 </article>
@@ -237,20 +233,14 @@ NAT失效即意味请求失败。同样的情况也发生在：暴露了错误�
     
 
         <p class="article-excerpt">
-            现象：
-从监控软件上查看jvm堆区使用 
-非堆区， 
-metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill
+            现象：从监控软件上查看jvm堆区使用
+非堆区，
+metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill
 pod重新拉起一个新的容器
 概念：
-
-
-JVM-1.8 内存模型
-
 Metaspace 直接在OS上分配的内存。
 Metaspace 存放的是加载的class
-加载class的
+加载class的过程是由class loader完成。
         </p>
     </div>
 </article>
@@ -289,15 +279,8 @@ Metaspace 存放的是加载的class
     
 
         <p class="article-excerpt">
-            k8s 自动扩缩容概览
-Overview
-
-
-Overview
-
-Cluster Autoscaler - a component that automatically adjusts the size
-of a Kubernetes Cluster so that all pods have a place to run and there
-are no unneeded nodes. Work
+            k8s 自动扩缩容概览Overview
+Cluster Autoscaler - a component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Works with GCP, A
         </p>
     </div>
 </article>
@@ -324,14 +307,11 @@ are no unneeded nodes. Work
     
 
         <p class="article-excerpt">
-            azure-monitoring-KQL
-Azure monitor—Log Analystics
-VM’Extensions— OmsAgentForLinux
-扩展介绍
-基础语法
-语法
-CustomLog_CL | where RawData matches regex "System warning” - 区分大小写
-- 语法来源 来自 Azure Data Explorer ，但又不完全相
+            azure-monitoring-KQLAzure monitor—Log AnalysticsVM’Extensions— OmsAgentForLinux
+扩展介绍基础语法语法CustomLog_CL | where RawData matches regex “System warning”
+
+区分大小写
+语法来源来自 Azure Data Explorer ，但又不完全相同 找不同比如,不
         </p>
     </div>
 </article>
@@ -372,14 +352,10 @@ CustomLog_CL | where RawData matches regex "System warning” - 区分大小写
     
 
         <p class="article-excerpt">
-            Kubeadm_证书
-介绍kubeadm中证书的用法，权限以及自定义证书的注意事项。
+            Kubeadm_证书介绍kubeadm中证书的用法，权限以及自定义证书的注意事项。
 kubeadm启动后生成如下证书:
 
-ls -l /etc/kubernetes/pki
--rw——- 1 root root 1679 Sep 6 14:12 ca.key
--rw-r–r– 1 root root 1025 Sep 6 14:12 ca.crt
--rw——- 1 root root 1675 
+ls -l /etc/kubernetes/pki-rw——- 1 root root 1679 Sep 6 14:12 ca.key-rw-r–r– 1 root root 1025 Sep 6 14:12 ca.crt-rw——- 1 root root 1675 Sep 
         </p>
     </div>
 </article>
@@ -407,7 +383,6 @@ ls -l /etc/kubernetes/pki
 
         <p class="article-excerpt">
             
-
         </p>
     </div>
 </article>
@@ -438,9 +413,8 @@ ls -l /etc/kubernetes/pki
     
 
         <p class="article-excerpt">
-            问题1：
-使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为：
-123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlg
+            问题1：使用for循环在/test目录下通过随机小写10个字母加固定字符串test批量创建10个html文件，名称例如为：
+123456[root@test test]# sh /server/scripts/test.sh  [root@test test]# ls  coaolvajcq_test.html qnvuxvicni_test.html vioesjmcbu_test.htmlgm
         </p>
     </div>
 </article>

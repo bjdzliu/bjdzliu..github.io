@@ -10,18 +10,20 @@
     
         <meta name="keywords" content="linux" />
     
-    <meta name="description" content="现象： 从监控软件上查看jvm堆区使用  非堆区，  metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill pod重新拉起一个新的容器 概念：   JVM-1.8 内存模型  Metaspace 直接在OS上分配的内存。 Metaspace 存放的是加载的class 加载class的">
+    <meta name="description" content="现象：从监控软件上查看jvm堆区使用 非堆区， metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill pod重新拉起一个新的容器 概念： Metaspace 直接在OS上分配的内存。 Metaspace 存放的是加载的class 加载class的过程是由class loader完成。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分析Metaspace不停增长的原因">
 <meta property="og:url" content="http://yoursite.com/2021/03/12/metaspace/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="现象： 从监控软件上查看jvm堆区使用  非堆区，  metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill pod重新拉起一个新的容器 概念：   JVM-1.8 内存模型  Metaspace 直接在OS上分配的内存。 Metaspace 存放的是加载的class 加载class的">
+<meta property="og:description" content="现象：从监控软件上查看jvm堆区使用 非堆区， metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill pod重新拉起一个新的容器 概念： Metaspace 直接在OS上分配的内存。 Metaspace 存放的是加载的class 加载class的过程是由class loader完成。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/edenspace.png">
 <meta property="article:published_time" content="2021-03-12T07:42:47.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.881Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.800Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/edenspace.png">
     
 
     
@@ -180,84 +182,56 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="现象">现象：</h3>
-<p>从监控软件上查看jvm堆区使用 <img
-src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/edenspace.png"
-alt="edenspace曲线" /></p>
-<p>非堆区， <img
-src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/metaspace_usage.png"
-alt="metaspace曲线" /></p>
-<p>metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill</p>
+            <h3 id="现象："><a href="#现象：" class="headerlink" title="现象："></a>现象：</h3><p>从监控软件上查看jvm堆区使用<br><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/edenspace.png" alt="edenspace曲线"></p>
+<p>非堆区，<br><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/metaspace_usage.png" alt="metaspace曲线"></p>
+<p>metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill</p>
 <p>pod重新拉起一个新的容器</p>
-<h3 id="概念">概念：</h3>
-<figure>
-<img
-src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/jvm-pic.png"
-alt="JVM-1.8 内存模型" />
-<figcaption aria-hidden="true">JVM-1.8 内存模型</figcaption>
-</figure>
+<h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/metaspace/jvm-pic.png" alt="JVM-1.8 内存模型"></p>
 <p>Metaspace 直接在OS上分配的内存。</p>
 <p>Metaspace 存放的是加载的class</p>
 <p>加载class的过程是由class loader完成。</p>
-<p>classloader： <a
-target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html">des
-in oracle</a></p>
-<p>类加载器尝试定位或生成构成类定义的数据,比如从文件系统获得class文件。</p>
+<p>classloader：<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html">des in oracle</a></p>
+<p>类加载器尝试定位或生成构成类定义的数据,比如从文件系统获得class文件。  </p>
 <p>或者动过动态编译并加载</p>
-<h3 id="分析">分析：</h3>
-<p>检查当前jvm中的类加载器及加载的类，查询classlloader中加载的类数量和列表</p>
-<p>步骤参阅  <a target="_blank" rel="noopener" href="http://arthas.gitee.io/">Arthas</a></p>
-<p>查询结果如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[arthas@1]$ classloader</span><br><span class="line">name                                                                                                               numberOfInstances                        loadedCountTotal</span><br><span class="line">org.apache.catalina.loader.ParallelWebappClassLoader                                          1                                                 13431</span><br><span class="line">org.drools.core.rule.JavaDialectRuntimeData$PackageClassLoader                       172                                             8494</span><br><span class="line">BootstrapClassLoader                                                                                               1                                               6083</span><br><span class="line">org.drools.core.base.ClassFieldAccessorCache$DefaultByteArrayClassLoader        169                                            4733</span><br></pre></td></tr></table></figure></p>
+<h3 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h3><p>检查当前jvm中的类加载器及加载的类，查询classlloader中加载的类数量和列表</p>
+<p>步骤参阅  <a target="_blank" rel="noopener" href="http://arthas.gitee.io/">Arthas</a></p>
+<p>查询结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[arthas@1]$ classloader</span><br><span class="line">name                                                                                                               numberOfInstances                        loadedCountTotal</span><br><span class="line">org.apache.catalina.loader.ParallelWebappClassLoader                                          1                                                 13431</span><br><span class="line">org.drools.core.rule.JavaDialectRuntimeData$PackageClassLoader                       172                                             8494</span><br><span class="line">BootstrapClassLoader                                                                                               1                                               6083</span><br><span class="line">org.drools.core.base.ClassFieldAccessorCache$DefaultByteArrayClassLoader        169                                            4733</span><br></pre></td></tr></table></figure>
+
+
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[arthas@1]$ classloader -a --org.apache.catalina.loader.ParallelWebappClassLoader &gt; class.list</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>统计 class.list 中类 差距比较大的如下</p>
+
+<p>统计 class.list 中类 差距比较大的如下  </p>
 <table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>class name</th>
 <th>prod</th>
 <th>non-prod</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>com.citic.user.assignment.checkiint.ruleengine.xxxxx</td>
 <td>17338</td>
 <td>8482</td>
 </tr>
-</tbody>
-</table>
-<h3 id="可能的原因">可能的原因：</h3>
-<p>大量动态加载生成的class</p>
-<h3 id="建议的解决方案">建议的解决方案：</h3>
-<p>1）通过设置MaxMetaspaceSize，触发metaspace中的fullgc，清理没有具体引用的class。
-结果: 经验证，fullgc已经将整个java进程冻结，服务请求失败。</p>
+</tbody></table>
+<h3 id="可能的原因："><a href="#可能的原因：" class="headerlink" title="可能的原因："></a>可能的原因：</h3><p>大量动态加载生成的class</p>
+<h3 id="建议的解决方案："><a href="#建议的解决方案：" class="headerlink" title="建议的解决方案："></a>建议的解决方案：</h3><p>1）通过设置MaxMetaspaceSize，触发metaspace中的fullgc，清理没有具体引用的class。<br>结果: 经验证，fullgc已经将整个java进程冻结，服务请求失败。</p>
 <p>因为，默认MaxMetaspaceSize没有设置，则无限大，意味着metaspace没有上限。</p>
 <p>(</p>
-<p>In JDK 8, the permanent generation was removed and the class metadata
-is allocated in native memory. The amount of native memory that can be
-used for class metadata is by default unlimited. Use the
-option MaxMetaspaceSize to put an upper limit on the amount of native
-memory used for class metadata. <a
-target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/considerations.html#:~:text=The%20default%20size%20of%20MetaspaceSize%20is%20platform-dependent%20and,%22Typical%20Heap%20Printout%22.%20Example%2011-1%20Typical%20Heap%20Printout">摘自
-jdk8 doc</a>.</p>
+<p>In JDK 8, the permanent generation was removed and the class metadata is allocated in native memory. The amount of native memory that can be used for class metadata is by default unlimited. Use the option MaxMetaspaceSize to put an upper limit on the amount of native memory used for class metadata.<br><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/considerations.html#:~:text=The%20default%20size%20of%20MetaspaceSize%20is%20platform-dependent%20and,%22Typical%20Heap%20Printout%22.%20Example%2011-1%20Typical%20Heap%20Printout">摘自 jdk8 doc</a>.</p>
 <p>)</p>
-<ol start="2" type="1">
-<li>检查代码生成这些类的方式，一般为静态代理或动态代理。</li>
-</ol>
-<p>背景知识： java里的class文件加载：</p>
+<p>2) 检查代码生成这些类的方式，一般为静态代理或动态代理。</p>
+<p>背景知识：<br>java里的class文件加载：</p>
 <p>方式1：根据class文件，读取到内存</p>
 <p>方式2：获取一个引用，把这个引用的对象的class，加载到内存。这是反射的实现方式</p>
 <p>动态加载利用了反射原理，jdk中提供了默认的类库、或者加载第三方类库来实现动态加载。</p>
 <p>默认类库：JDK Proxy动态代理，api在包java.lang.reflect中</p>
-<p>在代码中，以下语句(fake
-code)，会触发class加载，该class是某个对象的class： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class DynamicProxyHandler implements InvocationHandler &#123;</span><br><span class="line">...</span><br><span class="line">return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);</span><br><span class="line">...&#125;</span><br></pre></td></tr></table></figure>
-target.getClass() 获得被代理的对象的类，该类加载到jvm中。</p>
+<p>在代码中，以下语句(fake code)，会触发class加载，该class是某个对象的class：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class DynamicProxyHandler implements InvocationHandler &#123;</span><br><span class="line">...</span><br><span class="line">return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);</span><br><span class="line">...&#125;</span><br></pre></td></tr></table></figure>
+<p>target.getClass() 获得被代理的对象的类，该类加载到jvm中。</p>
 
         </div>
         <footer class="article-footer">
@@ -265,7 +239,7 @@ target.getClass() 获得被代理的对象的类，该类加载到jvm中。</p>
 
 
 
-    <a data-url="http://yoursite.com/2021/03/12/metaspace/" data-id="cm69b078c000rzgqe32284o12" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2021/03/12/metaspace/" data-id="cm69ca09d000rybp5ex2ih3tl" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

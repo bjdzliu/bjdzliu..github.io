@@ -174,12 +174,7 @@
     
 
         <p class="article-excerpt">
-            背景
-开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4
-等商业模型。在很多实际应用场景，无法使用最强的大模型 API
-，需要私有化部署小模型，需要控制推理成本。
-提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。
-论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般L
+            背景开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能
         </p>
     </div>
 </article>
@@ -207,15 +202,14 @@
 
         <p class="article-excerpt">
             训练模型时什么消耗了所有内存？
-
-model weights
-gradients
-optimizer states
+model weights 
+gradients 
+optimizer states 
 forward activations saved for gradient computation
 temporary buffers
-functionality-specific memory refer to model_memory_anatomy
+functionality-specific memoryrefer to model_memory_anatomy
 
-以 meta-llama
+以 meta-llam
         </p>
     </div>
 </article>
@@ -246,16 +240,9 @@ functionality-specific memory refer to model_memory_anatomy
     
 
         <p class="article-excerpt">
-            了解一些训练过程中必备的知识点
-买一个公有云GPU服务器，了解训练过程
-回顾基础知识
-模型量化、计算机计算精度：
-FP32 使用32位存储一个数字
-FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。
-INT8是
-FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）
-n-gram:
-统计语言模型，用于预测下一个词的概
+            了解一些训练过程中必备的知识点买一个公有云GPU服务器，了解训练过程
+回顾基础知识模型量化、计算机计算精度：FP32 使用32位存储一个数字FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）  
+n-gram:统计语言模型，用于预测下一个词的概率。利用
         </p>
     </div>
 </article>

@@ -10,18 +10,20 @@
     
         <meta name="keywords" content="Performance" />
     
-    <meta name="description" content="数据如何从网卡到应用 123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----">
+    <meta name="description" content="数据如何从网卡到应用123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----&amp;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Network Performance Tuning">
 <meta property="og:url" content="http://yoursite.com/2021/04/15/Network-Tuning/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="数据如何从网卡到应用 123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----">
+<meta property="og:description" content="数据如何从网卡到应用123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----&amp;">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/sync-queue.png">
 <meta property="article:published_time" content="2021-04-15T13:56:27.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.881Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.799Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="Performance">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/sync-queue.png">
     
 
     
@@ -180,8 +182,7 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="数据如何从网卡到应用">数据如何从网卡到应用</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NIC                    Kernel            Protocols           To App</span><br><span class="line">+---+----------+       +---------+       +-----------+       +--------+</span><br><span class="line">| P |  (    )  | ----&gt; | SoftIRQ | ----&gt; | Ethernet  | ----&gt; | Socket |</span><br><span class="line">| H | ( ring ) |       +---------+       |           |       | Buffer |</span><br><span class="line">| Y |  (    )  |       |         |       | IP / ICMP |       +--------+</span><br><span class="line">+---+----------+       | Backlog |       |           |</span><br><span class="line">                       | (maybe) |       | TCP / UDP |                 </span><br><span class="line">                       |         |       | SCTP      |                 </span><br><span class="line">                       +---------+       +-----------+</span><br></pre></td></tr></table></figure>
+            <h3 id="数据如何从网卡到应用"><a href="#数据如何从网卡到应用" class="headerlink" title="数据如何从网卡到应用"></a>数据如何从网卡到应用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NIC                    Kernel            Protocols           To App</span><br><span class="line">+---+----------+       +---------+       +-----------+       +--------+</span><br><span class="line">| P |  (    )  | ----&gt; | SoftIRQ | ----&gt; | Ethernet  | ----&gt; | Socket |</span><br><span class="line">| H | ( ring ) |       +---------+       |           |       | Buffer |</span><br><span class="line">| Y |  (    )  |       |         |       | IP / ICMP |       +--------+</span><br><span class="line">+---+----------+       | Backlog |       |           |</span><br><span class="line">                       | (maybe) |       | TCP / UDP |                 </span><br><span class="line">                       |         |       | SCTP      |                 </span><br><span class="line">                       +---------+       +-----------+</span><br></pre></td></tr></table></figure>
 <ul>
 <li>数据进入 Ring Buffer</li>
 <li>NIC硬中断，停止正在运行的进程，上下文切换</li>
@@ -191,68 +192,53 @@
 <li>数据放入到socket缓冲区</li>
 <li>SoftIRQ 线程继续轮询知道数据取完</li>
 </ul>
-<h3 id="网络性能瓶颈">网络性能瓶颈</h3>
-<h4 id="频繁中断">频繁中断</h4>
-<p>以腾讯云的一个vm为例
-网卡虚拟化技术，使用的virtio。所以，分析vm的性能，了解virtio的方案是必要的。
-以下显示CPU0在处理网卡的中断数量。 多个CPU，中断是否均匀</p>
+<h3 id="网络性能瓶颈"><a href="#网络性能瓶颈" class="headerlink" title="网络性能瓶颈"></a>网络性能瓶颈</h3><h4 id="频繁中断"><a href="#频繁中断" class="headerlink" title="频繁中断"></a>频繁中断</h4><p>以腾讯云的一个vm为例<br>网卡虚拟化技术，使用的virtio。所以，分析vm的性能，了解virtio的方案是必要的。<br>以下显示CPU0在处理网卡的中断数量。<br>多个CPU，中断是否均匀</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-5-ubuntu:~$ cat /proc/interrupts</span><br><span class="line">           CPU0</span><br><span class="line">  1:          9   IO-APIC   1-edge      i8042</span><br><span class="line">  4:         90   IO-APIC   4-edge      ttyS0</span><br><span class="line">  6:          3   IO-APIC   6-edge      floppy</span><br><span class="line">  8:          0   IO-APIC   8-edge      rtc0</span><br><span class="line">  9:          0   IO-APIC   9-fasteoi   acpi</span><br><span class="line"> 11:          0   IO-APIC  11-fasteoi   virtio2, uhci_hcd:usb1</span><br><span class="line"> 12:         15   IO-APIC  12-edge      i8042</span><br><span class="line"> 14:    4180743   IO-APIC  14-edge      ata_piix</span><br><span class="line"> 15:          0   IO-APIC  15-edge      ata_piix</span><br><span class="line"> 24:          0   PCI-MSI 98304-edge      virtio1-config</span><br><span class="line"> 25:   16000498   PCI-MSI 98305-edge      virtio1-req.0</span><br><span class="line"> 26:          0   PCI-MSI 81920-edge      virtio0-config</span><br><span class="line"> 27:   22148079   PCI-MSI 81921-edge      virtio0-input.0</span><br><span class="line"> 28:        359   PCI-MSI 81922-edge      virtio0-output.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="合适的eth0队列">合适的eth0队列</h4>
-<p>每个队列，绑定到不同的cpu上。 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># ethtool -l eth0</span><br><span class="line">Channel parameters for eth0:</span><br><span class="line">Pre-set maximums:</span><br><span class="line">RX:        0</span><br><span class="line">TX:        0</span><br><span class="line">Other:        0</span><br><span class="line">Combined:    16  表示最多支持16个队列</span><br><span class="line">Current hardware settings:</span><br><span class="line">RX:        0</span><br><span class="line">TX:        0</span><br><span class="line">Other:        0</span><br><span class="line">Combined:    8  表示当前是8个队列 rx-0 到 rx-7；tx-0 到tx-7</span><br><span class="line"></span><br></pre></td></tr></table></figure> 查看eth0的队列
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/class/net/eth0/queues/</span><br><span class="line">rx-0 rx-1 rx-2 rx-3 rx-4 rx-5 rx-6 rx-7 tx-0 tx-1 tx-2 tx-3 tx-4 tx-5 tx-6 tx-7</span><br></pre></td></tr></table></figure></p>
-<h4 id="设置ring-buffer">设置Ring Buffer</h4>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ethtool --show-ring eth0</span><br><span class="line">    Ring parameters for eth0:</span><br><span class="line">    Pre-set maximums:</span><br><span class="line">    RX:             4096</span><br><span class="line">    TX:             4096</span><br><span class="line">    Current hardware settings:</span><br><span class="line">    RX:             256</span><br><span class="line">    TX:             256</span><br></pre></td></tr></table></figure>
+
+<h4 id="合适的eth0队列"><a href="#合适的eth0队列" class="headerlink" title="合适的eth0队列"></a>合适的eth0队列</h4><p>每个队列，绑定到不同的cpu上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># ethtool -l eth0</span><br><span class="line">Channel parameters for eth0:</span><br><span class="line">Pre-set maximums:</span><br><span class="line">RX:        0</span><br><span class="line">TX:        0</span><br><span class="line">Other:        0</span><br><span class="line">Combined:    16  表示最多支持16个队列</span><br><span class="line">Current hardware settings:</span><br><span class="line">RX:        0</span><br><span class="line">TX:        0</span><br><span class="line">Other:        0</span><br><span class="line">Combined:    8  表示当前是8个队列 rx-0 到 rx-7；tx-0 到tx-7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>查看eth0的队列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls /sys/class/net/eth0/queues/</span><br><span class="line">rx-0 rx-1 rx-2 rx-3 rx-4 rx-5 rx-6 rx-7 tx-0 tx-1 tx-2 tx-3 tx-4 tx-5 tx-6 tx-7</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置Ring-Buffer"><a href="#设置Ring-Buffer" class="headerlink" title="设置Ring Buffer"></a>设置Ring Buffer</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ethtool --show-ring eth0</span><br><span class="line">    Ring parameters for eth0:</span><br><span class="line">    Pre-set maximums:</span><br><span class="line">    RX:             4096</span><br><span class="line">    TX:             4096</span><br><span class="line">    Current hardware settings:</span><br><span class="line">    RX:             256</span><br><span class="line">    TX:             256</span><br></pre></td></tr></table></figure>
 <ul>
 <li>data先放在NIC硬件中，kernel从中读取</li>
 <li>最大值4096</li>
 </ul>
-<h4 id="offload-的介入">offload 的介入</h4>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ethtool --show-features eth0|grep offload</span><br><span class="line">tcp-segmentation-offload: on</span><br><span class="line">udp-fragmentation-offload: off</span><br><span class="line">generic-segmentation-offload: on</span><br><span class="line">generic-receive-offload: on</span><br><span class="line">large-receive-offload: off [fixed]</span><br></pre></td></tr></table></figure>
-<p>默认网卡上启动了offload，它的作用如下： 如果app发送一个7,300
-Bytes的数据，它不会被在TCP层分成5个segment。而是作为一个整体，送到网卡上。
-网卡将7,300 Bytes分成5个segment。</p>
-<h4 id="检查在队列中的数据">检查在队列中的数据</h4>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat /proc/net/softnet_stat</span><br><span class="line">    7dab8f00 000004f6 000007a1 ...</span><br><span class="line">    7dce863c 0000001d 0000079b ...</span><br></pre></td></tr></table></figure>
-<p>第一列-表示该cpu收到的包个数；
-第二列-表示因softnet_data的输入队列满而丢弃的数据包个数（input_pkt_queue，队列长度最大值可通过/proc/sys/net/core/netdev_max_backlog调整）；
-第三列-表示软中断一次取走netdev_budget个数据包，或取数据包时间超过2ms的次数；</p>
-<p>修改netdev_max_backlog方式： sysctl -a|grep netdev_max_backlog
-net.core.netdev_max_backlog = 1000</p>
-<h4 id="tcp层控制">TCP层控制</h4>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#netstat -s|egrep &#x27;pruned|collapsed&#x27;</span><br><span class="line"></span><br><span class="line"># netstat -s</span><br><span class="line">    121093641 segments retransmited</span><br><span class="line">    120 packets pruned from receive queue because of socket buffer overrun</span><br><span class="line">    685394 packets collapsed in receive queue due to low socket buffer</span><br><span class="line">    1804 times recovered from packet loss due to fast retransmit</span><br><span class="line">    54444 congestion windows fully recovered</span><br><span class="line">    45760872 fast retransmits</span><br><span class="line">    23208494 retransmits in slow start</span><br></pre></td></tr></table></figure>
-<p>pruned: 由于套接字缓冲区溢出而从接收队列中删除的数据包<br />
-collapsed: Socket buffer满导致包无法放入</p>
+<h4 id="offload-的介入"><a href="#offload-的介入" class="headerlink" title="offload 的介入"></a>offload 的介入</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ethtool --show-features eth0|grep offload</span><br><span class="line">tcp-segmentation-offload: on</span><br><span class="line">udp-fragmentation-offload: off</span><br><span class="line">generic-segmentation-offload: on</span><br><span class="line">generic-receive-offload: on</span><br><span class="line">large-receive-offload: off [fixed]</span><br></pre></td></tr></table></figure>
+
+<p>默认网卡上启动了offload，它的作用如下：<br>如果app发送一个7,300 Bytes的数据，它不会被在TCP层分成5个segment。而是作为一个整体，送到网卡上。<br>网卡将7,300 Bytes分成5个segment。</p>
+<h4 id="检查在队列中的数据"><a href="#检查在队列中的数据" class="headerlink" title="检查在队列中的数据"></a>检查在队列中的数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat /proc/net/softnet_stat</span><br><span class="line">    7dab8f00 000004f6 000007a1 ...</span><br><span class="line">    7dce863c 0000001d 0000079b ...</span><br></pre></td></tr></table></figure>
+
+<p>第一列-表示该cpu收到的包个数；<br>第二列-表示因softnet_data的输入队列满而丢弃的数据包个数（input_pkt_queue，队列长度最大值可通过/proc/sys/net/core/netdev_max_backlog调整）；<br>第三列-表示软中断一次取走netdev_budget个数据包，或取数据包时间超过2ms的次数；</p>
+<p>修改netdev_max_backlog方式：<br>sysctl -a|grep netdev_max_backlog<br>net.core.netdev_max_backlog = 1000</p>
+<h4 id="TCP层控制"><a href="#TCP层控制" class="headerlink" title="TCP层控制"></a>TCP层控制</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#netstat -s|egrep &#x27;pruned|collapsed&#x27;</span><br><span class="line"></span><br><span class="line"># netstat -s</span><br><span class="line">    121093641 segments retransmited</span><br><span class="line">    120 packets pruned from receive queue because of socket buffer overrun</span><br><span class="line">    685394 packets collapsed in receive queue due to low socket buffer</span><br><span class="line">    1804 times recovered from packet loss due to fast retransmit</span><br><span class="line">    54444 congestion windows fully recovered</span><br><span class="line">    45760872 fast retransmits</span><br><span class="line">    23208494 retransmits in slow start</span><br></pre></td></tr></table></figure>
+<p>pruned: 由于套接字缓冲区溢出而从接收队列中删除的数据包<br>collapsed: Socket buffer满导致包无法放入</p>
 <ul>
-<li><p>调整socket tcp 缓冲区 三列分别是：min default max
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/sysctl.conf</span><br><span class="line">net.ipv4.tcp_rmem = 4096 262144 16777216</span><br><span class="line">net.ipv4.tcp_wmem = 4096 262144 16777216</span><br></pre></td></tr></table></figure></p></li>
-<li><p>调整socket 非TCP 缓冲区 tcp的缓冲区值，受限于这里的max
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net.core.rmem_max = 16777216</span><br><span class="line">net.core.wmem_max = 16777216</span><br><span class="line">net.core.rmem_default = 262144</span><br><span class="line">net.core.wmem_default = 262144</span><br></pre></td></tr></table></figure></p></li>
-<li><p>讨论是否打开TCP Timestamps</p></li>
+<li><p>调整socket tcp 缓冲区<br>三列分别是：min default max</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/sysctl.conf</span><br><span class="line">net.ipv4.tcp_rmem = 4096 262144 16777216</span><br><span class="line">net.ipv4.tcp_wmem = 4096 262144 16777216</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>调整socket 非TCP 缓冲区<br>tcp的缓冲区值，受限于这里的max</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net.core.rmem_max = 16777216</span><br><span class="line">net.core.wmem_max = 16777216</span><br><span class="line">net.core.rmem_default = 262144</span><br><span class="line">net.core.wmem_default = 262144</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>讨论是否打开TCP Timestamps</p>
+</li>
 </ul>
-<p>默认打开： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/net/ipv4/tcp_timestamps</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-如果是NAT的场景，不要使用这个值。原因是：<br />
-clientA和clientB都通过lvs访问server1；<br />
-time-a: clientA已经访问到server1;<br />
-time-b: clientB也是通过lvs服务器访问到server1<br />
-lvs的配置：tcp_tw_recycle=1&amp;tcp_timestamps=1<br />
-server1: 如果遇到 “源ip：源port”
-一样并请求第二次，第二次的时间戳晚，抛弃第二次连接</p>
-<p>tcp_tw_recycle 在kernel 4.x版本后已经废弃；<br />
-tcp_tw_recycle 表明尽快的回收处于 time_wait 状态的连接，不用等两个 MSL
-就关闭连接。
-缺点是：会拒绝所有比这个客户端时间戳更靠前的网络包。在开启</p>
+<p>默认打开：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/net/ipv4/tcp_timestamps</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>如果是NAT的场景，不要使用这个值。原因是：<br>clientA和clientB都通过lvs访问server1；<br>time-a: clientA已经访问到server1;<br>time-b: clientB也是通过lvs服务器访问到server1<br>lvs的配置：tcp_tw_recycle=1&amp;tcp_timestamps=1<br>server1: 如果遇到 “源ip：源port” 一样并请求第二次，第二次的时间戳晚，抛弃第二次连接  </p>
+<p>tcp_tw_recycle 在kernel 4.x版本后已经废弃；<br>tcp_tw_recycle 表明尽快的回收处于 time_wait 状态的连接，不用等两个 MSL 就关闭连接。<br>               缺点是：会拒绝所有比这个客户端时间戳更靠前的网络包。在开启</p>
 <ul>
-<li>SACK
-SACK是接收方用来向发送方通知已经接收到哪些序列号段的一种机制，这样发送方在重传时就只需要重传接收方真正未收到的部分即可。</li>
+<li>SACK<br>SACK是接收方用来向发送方通知已经接收到哪些序列号段的一种机制，这样发送方在重传时就只需要重传接收方真正未收到的部分即可。</li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@VM-0-5-ubuntu:/proc# sysctl -a|grep tcp_sack</span><br><span class="line">net.ipv4.tcp_sack = 1</span><br></pre></td></tr></table></figure>
-<h4 id="应用层控制">应用层控制</h4>
-<p>现象： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_0_15_centos ~]# netstat -s | grep -i listen    </span><br><span class="line">62678 times the listen queue of a socket overflowed    ---- &gt;应用处理全连接队列(accept queue)过慢导致；</span><br><span class="line">65640 SYNs to LISTEN sockets dropped  ----&gt; 半链接满了</span><br></pre></td></tr></table></figure> 可调的位置： 针对accept queue，调整 修改全连接
-/proc/sys/net/core/somaxconn 默认128</p>
-<p>或者，调整应用层的backlog，比如： listen 443 ssl backlog=20480;</p>
-<p>全连接和半连接的关系： <img
-src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/sync-queue.png"
-alt="全连接和半连接的关系" /></p>
+
+
+<h4 id="应用层控制"><a href="#应用层控制" class="headerlink" title="应用层控制"></a>应用层控制</h4><p>现象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM_0_15_centos ~]# netstat -s | grep -i listen    </span><br><span class="line">62678 times the listen queue of a socket overflowed    ---- &gt;应用处理全连接队列(accept queue)过慢导致；</span><br><span class="line">65640 SYNs to LISTEN sockets dropped  ----&gt; 半链接满了</span><br></pre></td></tr></table></figure>
+<p>可调的位置：<br>针对accept queue，调整<br>修改全连接<br>/proc/sys/net/core/somaxconn<br>默认128</p>
+<p>或者，调整应用层的backlog，比如：<br>listen 443 ssl backlog=20480;</p>
+<p>全连接和半连接的关系：<br><img src="https://bjdzliu.oss-cn-beijing.aliyuncs.com/hexo_images/sync-queue.png" alt="全连接和半连接的关系"></p>
 
         </div>
         <footer class="article-footer">
@@ -260,7 +246,7 @@ alt="全连接和半连接的关系" /></p>
 
 
 
-    <a data-url="http://yoursite.com/2021/04/15/Network-Tuning/" data-id="cm69b0786000ezgqe5o61dihb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2021/04/15/Network-Tuning/" data-id="cm69ca096000eybp51opfb54p" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

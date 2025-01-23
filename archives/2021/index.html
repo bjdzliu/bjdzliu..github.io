@@ -174,13 +174,9 @@
     
 
         <p class="article-excerpt">
-            介绍
-通过 iptables 或 nftables 配置的 NAT 构建在 netfilters
-连接跟踪工具之上。 conntrack 命令用于检查和更改状态表。
-它是“conntrack-tools”包的一部分。
-跟踪状态表
-连接跟踪子系统跟踪它所看到的所有数据包流。运行 “sudo conntrack-l”
-查看其内容: 123tcp 6 43184 ESTABLISHED src=192.
+            介绍通过 iptables 或 nftables 配置的 NAT 构建在 netfilters 连接跟踪工具之上。 conntrack 命令用于检查和更改状态表。 它是“conntrack-tools”包的一部分。
+跟踪状态表连接跟踪子系统跟踪它所看到的所有数据包流。运行 “sudo conntrack-l” 查看其内容:
+123tcp 6 43184 ESTABLISHED src=192.16
         </p>
     </div>
 </article>
@@ -207,11 +203,8 @@
     
 
         <p class="article-excerpt">
-            介绍
-NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。
-NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。
-定位这类问题的方法：判断请求和预期得到的地址是否一致。
-连接跟踪(Connection tracki
+            介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。
+连接跟踪(Connection tracking）
         </p>
     </div>
 </article>
@@ -242,8 +235,7 @@ NAT失效即意味请求失败。同样的情况也发生在：暴露了错误�
     
 
         <p class="article-excerpt">
-            数据如何从网卡到应用
-123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----
+            数据如何从网卡到应用123456789NIC                    Kernel            Protocols           To App+---+----------+       +---------+       +-----------+       +--------+| P |  (    )  | ----&gt; | SoftIRQ | ----&
         </p>
     </div>
 </article>
@@ -270,20 +262,14 @@ NAT失效即意味请求失败。同样的情况也发生在：暴露了错误�
     
 
         <p class="article-excerpt">
-            现象：
-从监控软件上查看jvm堆区使用 
-非堆区， 
-metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill
+            现象：从监控软件上查看jvm堆区使用
+非堆区，
+metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill
 pod重新拉起一个新的容器
 概念：
-
-
-JVM-1.8 内存模型
-
 Metaspace 直接在OS上分配的内存。
 Metaspace 存放的是加载的class
-加载class的
+加载class的过程是由class loader完成。
         </p>
     </div>
 </article>

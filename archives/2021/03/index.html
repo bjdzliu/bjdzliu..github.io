@@ -174,20 +174,14 @@
     
 
         <p class="article-excerpt">
-            现象：
-从监控软件上查看jvm堆区使用 
-非堆区， 
-metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill
+            现象：从监控软件上查看jvm堆区使用
+非堆区，
+metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill
 pod重新拉起一个新的容器
 概念：
-
-
-JVM-1.8 内存模型
-
 Metaspace 直接在OS上分配的内存。
 Metaspace 存放的是加载的class
-加载class的
+加载class的过程是由class loader完成。
         </p>
     </div>
 </article>

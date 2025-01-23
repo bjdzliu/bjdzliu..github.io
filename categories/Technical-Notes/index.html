@@ -174,12 +174,7 @@
     
 
         <p class="article-excerpt">
-            背景
-开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4
-等商业模型。在很多实际应用场景，无法使用最强的大模型 API
-，需要私有化部署小模型，需要控制推理成本。
-提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。
-论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般L
+            背景开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能
         </p>
     </div>
 </article>
@@ -207,15 +202,14 @@
 
         <p class="article-excerpt">
             训练模型时什么消耗了所有内存？
-
-model weights
-gradients
-optimizer states
+model weights 
+gradients 
+optimizer states 
 forward activations saved for gradient computation
 temporary buffers
-functionality-specific memory refer to model_memory_anatomy
+functionality-specific memoryrefer to model_memory_anatomy
 
-以 meta-llama
+以 meta-llam
         </p>
     </div>
 </article>
@@ -246,16 +240,9 @@ functionality-specific memory refer to model_memory_anatomy
     
 
         <p class="article-excerpt">
-            了解一些训练过程中必备的知识点
-买一个公有云GPU服务器，了解训练过程
-回顾基础知识
-模型量化、计算机计算精度：
-FP32 使用32位存储一个数字
-FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。
-INT8是
-FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）
-n-gram:
-统计语言模型，用于预测下一个词的概
+            了解一些训练过程中必备的知识点买一个公有云GPU服务器，了解训练过程
+回顾基础知识模型量化、计算机计算精度：FP32 使用32位存储一个数字FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）  
+n-gram:统计语言模型，用于预测下一个词的概率。利用
         </p>
     </div>
 </article>
@@ -294,16 +281,15 @@ n-gram:
     
 
         <p class="article-excerpt">
-            某用户面临如下问题：
-销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：
-- 对某些术语不了解，需要去查公司内部的知识库 -
-只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来
--
-业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率
-- 一图胜千言,一表胜千语
-解决思路：
+            某用户面临如下问题：销售人员在数据检索过程中，认为操作太繁杂、花费大量时间，比如：  
 
-利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作
+对某些术语不了解，需要去查公司内部的知识库
+只想要某几个数据，但是检索系统返回一大堆相关数据，需要花时间自己查找出来
+业务系统比较多，有的支持手机，有的只能在PC上查询，来回操作影响效率  
+一图胜千言,一表胜千语
+
+解决思路：
+利用对话交互方式轻松获取所需数据，无需等待技术人员生成特定报告，提高工作效率并增
         </p>
     </div>
 </article>
@@ -330,13 +316,9 @@ n-gram:
     
 
         <p class="article-excerpt">
-            在听了很多关于 自注意力机制
-的描述后，不自觉的会想到它用什么数学方式，模仿人类思考、关注重点词汇、短语呢？
-这里我打算记录一下个人理解。
-当遇到一句话时：
-”The animal didn't cross the street because it was too tired" it
-代表什么呢？人类一下子就能理解，但是计算机需要经过一系列计算，识别出it在这句话中的意义、重要程度。
-当模型处理
+            在听了很多关于 自注意力机制 的描述后，不自觉的会想到它用什么数学方式，模仿人类思考、关注重点词汇、短语呢？这里我打算记录一下个人理解。
+当遇到一句话时：”The animal didn’t cross the street because it was too tired”it 代表什么呢？人类一下子就能理解，但是计算机需要经过一系列计算，识别出it在这句话中的意义、重要程度。  
+当模型处理每
         </p>
     </div>
 </article>
@@ -368,13 +350,8 @@ n-gram:
 
         <p class="article-excerpt">
             想快速学习 Generative AI , 先收集一下这些术语
-A
-auto-regressive model
-自回归模型
-一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于
-Transformer 的大型语言模型都是自回归的。
-相比之下，基于 GAN
-的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是
+Aauto-regressive model自回归模型一种根据自己先前的预测推断出预测的模型。例如，自回归语言模型基于先前预测的令牌来预测下一个令牌。所有基于 Transformer 的大型语言模型都是自回归的。
+相比之下，基于 GAN 的图像模型通常不会自动回归，因为它们在一个单一的前向通道中生成图像，而不是在步骤中迭代。但是，某些
         </p>
     </div>
 </article>
@@ -401,15 +378,9 @@ Transformer 的大型语言模型都是自回归的。
     
 
         <p class="article-excerpt">
-            大型语言模型（LLM），比如GPT-3，它的"推理"功能可以根据文本提示生成类似人类的回答。
-LLM 中推理是什么？
-推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。
-LLM 如何进行推理？
-首先了解两项技术
-技术之一是 Self-Attention 自注意力机制。
-自注意力机制允许模型在生成响应时关注输入文本的 特定
-部分。
-它能够并行计算，而不需要
+            大型语言模型（LLM），比如GPT-3，它的”推理”功能可以根据文本提示生成类似人类的回答。
+LLM 中推理是什么？推理是指模型根据语境和输入做出预测或反应的能力，利用对语言和上下文的理解生成相关和适当的响应。
+LLM 如何进行推理？首先了解两项技术技术之一是 Self-Attention 自注意力机制。自注意力机制允许模型在生成响应时关注输入文本的 特定 部分。它能够并行计算，而不需要按顺序处理
         </p>
     </div>
 </article>
@@ -450,13 +421,9 @@ LLM 如何进行推理？
     
 
         <p class="article-excerpt">
-            介绍
-通过 iptables 或 nftables 配置的 NAT 构建在 netfilters
-连接跟踪工具之上。 conntrack 命令用于检查和更改状态表。
-它是“conntrack-tools”包的一部分。
-跟踪状态表
-连接跟踪子系统跟踪它所看到的所有数据包流。运行 “sudo conntrack-l”
-查看其内容: 123tcp 6 43184 ESTABLISHED src=192.
+            介绍通过 iptables 或 nftables 配置的 NAT 构建在 netfilters 连接跟踪工具之上。 conntrack 命令用于检查和更改状态表。 它是“conntrack-tools”包的一部分。
+跟踪状态表连接跟踪子系统跟踪它所看到的所有数据包流。运行 “sudo conntrack-l” 查看其内容:
+123tcp 6 43184 ESTABLISHED src=192.16
         </p>
     </div>
 </article>
@@ -483,11 +450,8 @@ LLM 如何进行推理？
     
 
         <p class="article-excerpt">
-            介绍
-NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。
-NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。
-定位这类问题的方法：判断请求和预期得到的地址是否一致。
-连接跟踪(Connection tracki
+            介绍NAT是可以将Container和VM的内部地址暴露在公网中。传入的连接请求的目的地址被重写成另一个地址。然后，Packet经路由送到container和VM中。这也被用在LB的技术中。NAT失效即意味请求失败。同样的情况也发生在：暴露了错误的服务，container中断连接、连接超时等。定位这类问题的方法：判断请求和预期得到的地址是否一致。
+连接跟踪(Connection tracking）
         </p>
     </div>
 </article>
@@ -518,20 +482,14 @@ NAT失效即意味请求失败。同样的情况也发生在：暴露了错误�
     
 
         <p class="article-excerpt">
-            现象：
-从监控软件上查看jvm堆区使用 
-非堆区， 
-metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod
-request limit，发生oom，容器被os kill
+            现象：从监控软件上查看jvm堆区使用
+非堆区，
+metaspace空间持续上升后，metaspace+edenspace &gt; 7G, 超过了 pod request limit，发生oom，容器被os kill
 pod重新拉起一个新的容器
 概念：
-
-
-JVM-1.8 内存模型
-
 Metaspace 直接在OS上分配的内存。
 Metaspace 存放的是加载的class
-加载class的
+加载class的过程是由class loader完成。
         </p>
     </div>
 </article>

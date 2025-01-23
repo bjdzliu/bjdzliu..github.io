@@ -174,14 +174,10 @@
     
 
         <p class="article-excerpt">
-            INSTALL CEPH ON A
-SINGLE NODE(BARE METAL)
-此文是在linuxone上创建ceph存储的例子。
+            INSTALL CEPH ON A SINGLE NODE(BARE METAL)此文是在linuxone上创建ceph存储的例子。
 同amd64架构。脱胎于ceph的官方文档。
-如果是linuxone的机器，请设置/etc/hosts文件如下 YOUR.HOST.PUBLIC.IP
-hostname
-更改iptables的规则，添加一条本机到本机的规则：
-iptables -A INPUT -
+如果是linuxone的机器，请设置/etc/hosts文件如下YOUR.HOST.PUBLIC.IP hostname
+更改iptables的规则，添加一条本机到本机的规则：iptables -A INPUT -s Y
         </p>
     </div>
 </article>
@@ -208,10 +204,10 @@ iptables -A INPUT -
     
 
         <p class="article-excerpt">
-            K8s-Calico-网络验证
-k8s和calico已经深度结合，在使用上也很方便。实验内容来自双方的官方文档。
-1. 默认可以互相访问
-比如： 12345kubectl run nginx --image=nginx --replicas=2kubectl expose deployment nginx --port=80kubectl run busybox --rm -ti --image=
+            K8s-Calico-网络验证k8s和calico已经深度结合，在使用上也很方便。实验内容来自双方的官方文档。
+
+默认可以互相访问比如：
+12345kubectl run nginx --image=nginx --replicas=2kubectl expose deployment nginx --port=80kubectl run busybox --rm -ti --image=busy
         </p>
     </div>
 </article>

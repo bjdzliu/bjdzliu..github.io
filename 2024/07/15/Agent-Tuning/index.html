@@ -10,15 +10,15 @@
     
         <meta name="keywords" content="LLM" />
     
-    <meta name="description" content="背景 开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。 提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。 论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般L">
+    <meta name="description" content="背景开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Agent-Tuning">
 <meta property="og:url" content="http://yoursite.com/2024/07/15/Agent-Tuning/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="背景 开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。 提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。 论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般L">
+<meta property="og:description" content="背景开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-07-15T20:33:00.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.880Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.798Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary">
@@ -180,174 +180,85 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="背景">背景</h3>
-<p>开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4
-等商业模型。在很多实际应用场景，无法使用最强的大模型 API
-，需要私有化部署小模型，需要控制推理成本。<br />
-提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。<br />
-论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能力</p>
-<h3 id="方法">方法</h3>
-<ul>
-<li>构建 AgentInstruct 数据集<br />
+            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>开源通用的LLMs在执行 agent 任务时，远不如 ChatGPT 和 GPT-4 等商业模型。在很多实际应用场景，无法使用最强的大模型 API ，需要私有化部署小模型，需要控制推理成本。<br>提高agent任务的能力，要么是专注对某个LLM进行agent调优，要么是写一个专门的agent框架。<br>论文里提出了Agent-Tuning，其目标是提高LLMs的通用代理能力，同时至少保持它们的一般LLM能力  </p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
+<li>构建 AgentInstruct 数据集  </li>
+<li>微调大模型  </li>
+</ul>
+<h3 id="训练成本估算"><a href="#训练成本估算" class="headerlink" title="训练成本估算"></a>训练成本估算</h3><ul>
+<li><p>训练框架： HuggingFace Trainer + DeepSpeed Zero3  </p>
 </li>
-<li>微调大模型</li>
+<li><p>配置说明：max_len：4096 + Flash Attention + bf16 （batchsize=1、AdamW优化器）  </p>
+</li>
 </ul>
-<h3 id="训练成本估算">训练成本估算</h3>
-<ul>
-<li><p>训练框架： HuggingFace Trainer + DeepSpeed Zero3</p></li>
-<li><p>配置说明：max_len：4096 + Flash Attention + bf16
-（batchsize=1、AdamW优化器）</p></li>
-</ul>
-<p>模型可以处理的最大 token : 4096<br />
-通过减少显存访问次数和优化计算流程，显著加速 Transformer
-模型中的自注意力机制<br />
-采用 bfloat16 浮点数格式，减少了内存占用和计算开销<br />
-多卡训练可以减少训练时间。<br />
-| <strong>模型</strong> | <strong>训练最低配置</strong> |
-<strong>训练数据规模（token数）</strong> | <strong>建议训练 epoch
-数</strong> | <strong>平均训练时长</strong> | | --- | --- | :---: |
-:---: | --- | | 7B （全参数） | 4卡A100（4 * 80G） | 470M | 5 | 25h * 5
-= 125h | | 14B （全参数） | 8卡A100（8 * 80G） | 470M | 4 | 24h * 4 =
-96h | | 72B （全参数） | 32卡A100（32 * 80G） | 470M | 2 | 40h * 2 = 80h
-|</p>
-<h3 id="构建-agentinstruct">构建 AgentInstruct</h3>
-<p>智谱开源<br />
-AgentInstruct 是一个经过挑选的智能体数据集，包含 1866 个高质量交互、6
-个多样化的真实场景任务<br />
-数据集开源在 🤗<a
-target="_blank" rel="noopener" href="https://huggingface.co/datasets/THUDM/AgentInstruct">Huggingface
-Repo</a></p>
-<h4 id="构建训练数据">构建训练数据</h4>
-<p>开源 agent tool prompt
-思路是一样的，只是prompt的描述，tool和返回action的结构有所不同。<br />
-训练数据应该包含各种不同的prompt模板和response<br />
-这里举一个简单的prompt的例子<br />
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">instruction = <span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You should follow the instructions to answer the question.</span></span><br><span class="line"><span class="string">1. Each time you make a decision, you use only one tool, and you can use it as many times as you like.</span></span><br><span class="line"><span class="string">2. Ensure that the command you invoke or the tool you use is included in the following given list of tools.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Answer the following questions as best you can. You have access to the following tools:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"><span class="subst">&#123;tool_list&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">If you find you need to find information from one of these tools, you can use the corresponding action. Tell me what action you want to take, and I will provide you with the information you need.</span></span><br><span class="line"><span class="string">If you need action, tell me the action name and wait for the result I send you.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Print the content using the following format:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: the input question you must answer</span></span><br><span class="line"><span class="string">Thought: you should always think about what to do</span></span><br><span class="line"><span class="string">Action: the action to take, should be one of <span class="subst">&#123;tool_list&#125;</span></span></span><br><span class="line"><span class="string">Action Input: the input to the action</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Begin!</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure></p>
+<p>模型可以处理的最大 token : 4096<br>通过减少显存访问次数和优化计算流程，显著加速 Transformer 模型中的自注意力机制<br>采用 bfloat16 浮点数格式，减少了内存占用和计算开销<br>多卡训练可以减少训练时间。<br>| <strong>模型</strong> | <strong>训练最低配置</strong> | <strong>训练数据规模（token数）</strong> | <strong>建议训练 epoch 数</strong> | <strong>平均训练时长</strong> |<br>| — | — | :—: | :—: | — |<br>| 7B （全参数）  | 4卡A100（4 * 80G） | 470M | 5 | 25h * 5 = 125h |<br>| 14B （全参数） | 8卡A100（8 * 80G） | 470M | 4 | 24h * 4 = 96h |<br>| 72B （全参数） | 32卡A100（32 * 80G） | 470M | 2 | 40h * 2 = 80h | </p>
+<h3 id="构建-AgentInstruct"><a href="#构建-AgentInstruct" class="headerlink" title="构建 AgentInstruct"></a>构建 AgentInstruct</h3><p>智谱开源<br>AgentInstruct 是一个经过挑选的智能体数据集，包含 1866 个高质量交互、6 个多样化的真实场景任务<br>数据集开源在 🤗<a target="_blank" rel="noopener" href="https://huggingface.co/datasets/THUDM/AgentInstruct">Huggingface Repo</a>  </p>
+<h4 id="构建训练数据"><a href="#构建训练数据" class="headerlink" title="构建训练数据"></a>构建训练数据</h4><p>开源 agent tool prompt 思路是一样的，只是prompt的描述，tool和返回action的结构有所不同。<br>训练数据应该包含各种不同的prompt模板和response<br>这里举一个简单的prompt的例子  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">instruction = <span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">You should follow the instructions to answer the question.</span></span><br><span class="line"><span class="string">1. Each time you make a decision, you use only one tool, and you can use it as many times as you like.</span></span><br><span class="line"><span class="string">2. Ensure that the command you invoke or the tool you use is included in the following given list of tools.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Answer the following questions as best you can. You have access to the following tools:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"><span class="subst">&#123;tool_list&#125;</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">If you find you need to find information from one of these tools, you can use the corresponding action. Tell me what action you want to take, and I will provide you with the information you need.</span></span><br><span class="line"><span class="string">If you need action, tell me the action name and wait for the result I send you.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Print the content using the following format:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Question: the input question you must answer</span></span><br><span class="line"><span class="string">Thought: you should always think about what to do</span></span><br><span class="line"><span class="string">Action: the action to take, should be one of <span class="subst">&#123;tool_list&#125;</span></span></span><br><span class="line"><span class="string">Action Input: the input to the action</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Begin!</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>LLM 第一次返回</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Thought: I need to retrieve information about the latest commit in the repository demo2_jenkinsfile in GitHub.</span><br><span class="line"></span><br><span class="line">Action: github_api  </span><br><span class="line">Action Input: repository=demo2_jenkinsfile, info=latest_commit  </span><br></pre></td></tr></table></figure>
-<p>在程序中，获取action，调用工具得到结果后，将结果及以上prompt
-一并输入给LLM，最终得到 response<br />
-截止到现在，已经得到了一个训练数据样例：</p>
+<p>在程序中，获取action，调用工具得到结果后，将结果及以上prompt 一并输入给LLM，最终得到 response<br>截止到现在，已经得到了一个训练数据样例：  </p>
 <table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Input ( Agent Prompt )</th>
 <th>Output ( Response )</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
-<td>｜You should follow the instructions to answer the question.<br />1.
-Each time you make a decision, you use only one tool, and you can use it
-as many times as you like.<br />2. Ensure that the command you invoke or
-the tool you use is included in the following given list of
-tools.<br />Answer the following questions as best you can. You have
-access to the following tools:<br />{tool_list}<br />If you find you
-need to find information from one of these tools, you can use the
-corresponding action. Tell me what action you want to take, and I will
-provide you with the information you need.<br />If you need action, tell
-me the action name and wait for the result I send you.<br />Print the
-content using the following format:<br />Question: the input question
-you must answer<br />Thought: you should always think about what to
-do<br />Action: the action to take, should be one of
-{tool_list}<br />Action Input: the input to the action</td>
-<td>Thought: To find the latest commit in the repository
-demo2_jenkinsfile in GitHub, I should use the github_api tool. Let's use
-it to retrieve the information.<br />Action: github_api<br />Action
-Input: repository = "demo2_jenkinsfile"<br />Observation: The latest
-commit in the repository demo2_jenkinsfile is
-"cde45f67890abcde12345f67890abcde12345f6".<br />Thought: The latest
-commit in the repository demo2_jenkinsfile is
-"cde45f67890abcde12345f67890abcde12345f6".</td>
+<tbody><tr>
+<td>｜You should follow the instructions to answer the question.<br />1. Each time you make a decision, you use only one tool, and you can use it as many times as you like.<br />2. Ensure that the command you invoke or the tool you use is included in the following given list of tools.<br />Answer the following questions as best you can. You have access to the following tools:<br />{tool_list}<br />If you find you need to find information from one of these tools, you can use the corresponding action. Tell me what action you want to take, and I will provide you with the information you need.<br />If you need action, tell me the action name and wait for the result I send you.<br />Print the content using the following format:<br />Question: the input question you must answer<br />Thought: you should always think about what to do<br />Action: the action to take, should be one of {tool_list}<br />Action Input: the input to the action</td>
+<td>Thought: To find the latest commit in the repository demo2_jenkinsfile in GitHub, I should use the github_api tool. Let’s use it to retrieve the information.<br />Action: github_api<br />Action Input: repository = “demo2_jenkinsfile”<br />Observation: The latest commit in the repository demo2_jenkinsfile is “cde45f67890abcde12345f67890abcde12345f6”.<br />Thought: The latest commit in the repository demo2_jenkinsfile is “cde45f67890abcde12345f67890abcde12345f6”.</td>
 </tr>
-</tbody>
-</table>
-<p>有了训练数据，就可以进行全参微调，如果仅进行 LoRA（Low-Rank
-Adaptation），效果可能不理想</p>
-<h4 id="效果评估">效果评估</h4>
-<p>根据任务需求，设计输入模板或提示词（prompt），指导 GPT-4
-生成相关样本。<br />
-对 GPT-4 生成的样本进行人工审核，检查其准确性和合理性。<br />
-将修正后的样本与初始验证集合并，形成最终的 benchmark。<br />
-采用综合评估方法，结合了 精确匹配（Exact Match, EM） 和 模糊匹配（如
-ROUGE、BLEU） 两种评估方式，分别对工具名称和任务描述进行评分。</p>
-<p><span class="math display">\[
-\text{Score} = \text{EM}(T_{\text{gt}}, T_{\text{pred}}) + \lambda
-\times \text{Image}(D_{\text{gt}}, D_{\text{pred}})
-\]</span></p>
+</tbody></table>
+<p>有了训练数据，就可以进行全参微调，如果仅进行 LoRA（Low-Rank Adaptation），效果可能不理想  </p>
+<h4 id="效果评估"><a href="#效果评估" class="headerlink" title="效果评估"></a>效果评估</h4><p>根据任务需求，设计输入模板或提示词（prompt），指导 GPT-4 生成相关样本。<br>对 GPT-4 生成的样本进行人工审核，检查其准确性和合理性。<br>将修正后的样本与初始验证集合并，形成最终的 benchmark。<br>采用综合评估方法，结合了 精确匹配（Exact Match, EM） 和 模糊匹配（如 ROUGE、BLEU） 两种评估方式，分别对工具名称和任务描述进行评分。  </p>
+<p>$$<br>\text{Score} = \text{EM}(T_{\text{gt}}, T_{\text{pred}}) + \lambda \times \text{Image}(D_{\text{gt}}, D_{\text{pred}})<br>$$</p>
 <ul>
-<li><span class="math inline">\(T_{\text{gt}}\)</span> ：Ground Truth
-中的工具名称。</li>
-<li><span class="math inline">\(T_{\text{pred}}\)</span>：待测试的 Agent
-Response 中的工具名称。</li>
-<li><span class="math inline">\(D_{\text{gt}}\)</span>：Ground Truth
-中的任务描述。</li>
-<li><span class="math inline">\(D_{\text{pred}}\)</span>：待测试的 Agent
-Response 中的任务描述。</li>
-<li><span class="math inline">\(\text{EM}(T_{\text{gt}},
-T_{\text{pred}})\)</span> ：精确匹配（Exact Match），结果为 0 或
-1。</li>
+<li>$T_{\text{gt}}$ ：Ground Truth 中的工具名称。 </li>
+<li>$T_{\text{pred}}$：待测试的 Agent Response 中的工具名称。 </li>
+<li>$D_{\text{gt}}$：Ground Truth 中的任务描述。 </li>
+<li>$D_{\text{pred}}$：待测试的 Agent Response 中的任务描述。 </li>
+<li>$\text{EM}(T_{\text{gt}}, T_{\text{pred}})$ ：精确匹配（Exact Match），结果为 0 或 1。</li>
 </ul>
-<p><span class="math display">\[
-\text{EM}(T_{\text{gt}}, T_{\text{pred}}) =
-\begin{cases}
-1 &amp; \text{if } T_{\text{gt}} = T_{\text{pred}} \\
-0 &amp; \text{otherwise}
-\end{cases}
-\]</span></p>
+<p>$$<br>\text{EM}(T_{\text{gt}}, T_{\text{pred}}) =<br>\begin{cases}<br>1 &amp; \text{if } T_{\text{gt}} = T_{\text{pred}} \<br>0 &amp; \text{otherwise}<br>\end{cases}<br>$$</p>
 <ul>
-<li><span class="math inline">\(\text{Image}(D_{\text{gt}},
-D_{\text{pred}})\)</span>：模糊匹配评分，可以使用 ROUGE、BLEU
-等文本生成质量评估方法，分值为 0-1。<br />
-</li>
-<li><span
-class="math inline">\(\lambda\)</span>：权重系数，用于平衡工具名称和任务描述在总分中的贡献。</li>
+<li>$\text{Image}(D_{\text{gt}}, D_{\text{pred}})$：模糊匹配评分，可以使用 ROUGE、BLEU 等文本生成质量评估方法，分值为 0-1。  </li>
+<li>$\lambda$：权重系数，用于平衡工具名称和任务描述在总分中的贡献。</li>
 </ul>
-<h4 id="人工评估笔记">人工评估（笔记）</h4>
-<p>评估标准示例：</p>
-<hr />
+<h4 id="人工评估（笔记）"><a href="#人工评估（笔记）" class="headerlink" title="人工评估（笔记）"></a>人工评估（笔记）</h4><p>评估标准示例：</p>
+<hr>
 <div font-size: 16px; padding-left:8px;">评分分为五个等级，具体定义如下：
 
-1分：核心信息存在重大不准确性，大部分或全部内容不正确；
-2分：核心信息不正确，或超过60%的内容有错误；
-3分：核心信息准确，但10%到60%的补充信息不正确；
-4分：小有出入，核心信息准确，补充信息中的错误不超过10%；
-5分：完全正确。
-
-得分为4分或5分的回答被认为是可用的。
-
-遇到违规内容一票否决，直接判0分。
-
-……
-
+<p>1分：核心信息存在重大不准确性，大部分或全部内容不正确；<br>2分：核心信息不正确，或超过60%的内容有错误；<br>3分：核心信息准确，但10%到60%的补充信息不正确；<br>4分：小有出入，核心信息准确，补充信息中的错误不超过10%；<br>5分：完全正确。</p>
+<p>得分为4分或5分的回答被认为是可用的。</p>
+<p>遇到违规内容一票否决，直接判0分。</p>
+<p>……</p>
 </div>
-<hr />
+
+<hr>
 <p>人工评估效率低、成本高，所以不能频繁使用，一般在大的模型版本上使用。</p>
-<p><br /></p>
-<h4 id="agent-泛化性提升-笔记">Agent 泛化性提升 （笔记）</h4>
-<p>从Query，Tools,Agent Prompt 模板三个维度提升泛性<br />
-- 1.覆盖全部场景
-在构建内部业务工具时，需要尽可能覆盖所有潜在的业务场景，特别是针对工具的查询（query）进行设计。这样可以避免遗漏某些场景，确保工具在不同场景下都能正常工作。</p>
+<br />
+
+<h4 id="Agent-泛化性提升-（笔记）"><a href="#Agent-泛化性提升-（笔记）" class="headerlink" title="Agent 泛化性提升 （笔记）"></a>Agent 泛化性提升 （笔记）</h4><p>从Query，Tools,Agent Prompt 模板三个维度提升泛性  </p>
 <ul>
-<li><p>2.困难负样本的构造<br />
-在样本构建时，需要确保正样本和负样本的多样性，特别是困难负样本的构造。正样本是那些明确需要调用工具的查询，而困难负样本是那些看起来和工具相关但实际上不需要调用工具的查询。这样的设计可以帮助训练模型识别工具调用的边界。</p>
-<p>示例：</p>
+<li><p>1.覆盖全部场景<br>在构建内部业务工具时，需要尽可能覆盖所有潜在的业务场景，特别是针对工具的查询（query）进行设计。这样可以避免遗漏某些场景，确保工具在不同场景下都能正常工作。  </p>
+</li>
+<li><p>2.困难负样本的构造<br>  在样本构建时，需要确保正样本和负样本的多样性，特别是困难负样本的构造。正样本是那些明确需要调用工具的查询，而困难负样本是那些看起来和工具相关但实际上不需要调用工具的查询。这样的设计可以帮助训练模型识别工具调用的边界。  </p>
+<p>  示例：  </p>
 <ul>
-<li>正样本：上海明天天气怎么样？（需要调用天气查询工具）<br />
+<li>正样本：上海明天天气怎么样？（需要调用天气查询工具）  </li>
+<li>困难负样本：今天天气真好（虽然提到天气，但不需要调用工具）  </li>
+<li>经验值：正样本和困难负样本的比例通常建议为 4:1。<br>样本复杂度的多样性  </li>
+</ul>
 </li>
-<li>困难负样本：今天天气真好（虽然提到天气，但不需要调用工具）<br />
+</ul>
+<ul>
+<li>3.工具描述格式多样性<br>  同一个工具在不同平台或框架中可能会有不同的描述格式。<br>  例如，OpenAI function、AutoGPT在描述方式上可能有所不同：    <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;: &quot;web_search&quot;, &quot;description&quot;: &quot;Perform an internet search.&quot;, &quot;parameters&quot;: &#123;&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: &#123;&quot;text&quot;: &#123;&quot;type&quot;: &quot;str&quot;, &quot;description&quot;: &quot;Search query.&quot;&#125;&#125;&#125;, &quot;returns&quot;: &#123;&quot;description&quot;: &quot;Multiple webpage links along with brief descriptions.&quot;, &quot;type&quot;: &quot;str&quot;&#125;, &quot;required&quot;: [&quot;text&quot;]&#125;</span><br><span class="line">AutoGPT：Web Search: &quot;web_search&quot;, args: &quot;text&quot;: &quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
 </li>
-<li>经验值：正样本和困难负样本的比例通常建议为 4:1。<br />
-样本复杂度的多样性</li>
-</ul></li>
-<li><p>3.工具描述格式多样性<br />
-同一个工具在不同平台或框架中可能会有不同的描述格式。<br />
-例如，OpenAI function、AutoGPT在描述方式上可能有所不同：<br />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;: &quot;web_search&quot;, &quot;description&quot;: &quot;Perform an internet search.&quot;, &quot;parameters&quot;: &#123;&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: &#123;&quot;text&quot;: &#123;&quot;type&quot;: &quot;str&quot;, &quot;description&quot;: &quot;Search query.&quot;&#125;&#125;&#125;, &quot;returns&quot;: &#123;&quot;description&quot;: &quot;Multiple webpage links along with brief descriptions.&quot;, &quot;type&quot;: &quot;str&quot;&#125;, &quot;required&quot;: [&quot;text&quot;]&#125;</span><br><span class="line">AutoGPT：Web Search: &quot;web_search&quot;, args: &quot;text&quot;: &quot;&quot;</span><br></pre></td></tr></table></figure></p></li>
 </ul>
 
         </div>
@@ -356,7 +267,7 @@ class="math inline">\(\lambda\)</span>：权重系数，用于平衡工具名称
 
 
 
-    <a data-url="http://yoursite.com/2024/07/15/Agent-Tuning/" data-id="cm69b07810005zgqe7unz2772" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2024/07/15/Agent-Tuning/" data-id="cm69ca08z0005ybp5at5o25y9" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {

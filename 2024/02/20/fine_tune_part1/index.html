@@ -10,15 +10,15 @@
     
         <meta name="keywords" content="LLM" />
     
-    <meta name="description" content="了解一些训练过程中必备的知识点 买一个公有云GPU服务器，了解训练过程 回顾基础知识 模型量化、计算机计算精度： FP32 使用32位存储一个数字 FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。 INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32） n-gram: 统计语言模型，用于预测下一个词的概">
+    <meta name="description" content="了解一些训练过程中必备的知识点买一个公有云GPU服务器，了解训练过程 回顾基础知识模型量化、计算机计算精度：FP32 使用32位存储一个数字FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）   n-gram:统计语言模型，用于预测下一个词的概率。利用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="总结Fine-Tune ChatGLM3的过程part-1">
 <meta property="og:url" content="http://yoursite.com/2024/02/20/fine_tune_part1/index.html">
 <meta property="og:site_name" content="Have a Nice Journey">
-<meta property="og:description" content="了解一些训练过程中必备的知识点 买一个公有云GPU服务器，了解训练过程 回顾基础知识 模型量化、计算机计算精度： FP32 使用32位存储一个数字 FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。 INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32） n-gram: 统计语言模型，用于预测下一个词的概">
+<meta property="og:description" content="了解一些训练过程中必备的知识点买一个公有云GPU服务器，了解训练过程 回顾基础知识模型量化、计算机计算精度：FP32 使用32位存储一个数字FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）   n-gram:统计语言模型，用于预测下一个词的概率。利用">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-02-20T14:11:00.000Z">
-<meta property="article:modified_time" content="2025-01-23T12:21:31.881Z">
+<meta property="article:modified_time" content="2025-01-23T12:58:18.799Z">
 <meta property="article:author" content="bjdzliu">
 <meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary">
@@ -180,99 +180,70 @@
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>了解一些训练过程中必备的知识点<br />
-买一个公有云GPU服务器，了解训练过程</p>
-<h3 id="回顾基础知识">回顾基础知识</h3>
-<p>模型量化、计算机计算精度：<br />
-FP32 使用32位存储一个数字<br />
-FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。<br />
-INT8是
-FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）</p>
-<p>n-gram:<br />
-统计语言模型，用于预测下一个词的概率。<br />
-利用机率大小來判断句子合不合理</p>
-<p>n是切词的个数。比如<br />
-n=2, 叫 bigram。"I love learning about deep
-learning."。这句话的bigrams将包括："I love"，"love learning"<br />
-n=3，叫trigram</p>
-<p>SLOT和BLEU的指标:<br />
-槽填充（Slot Filling）: 我从上海飞往北京。上海和北京是slot
-value。slot是离开城市和抵达城市<br />
-BLEU：精确匹配n-grams来测量句子相似度。机器翻译的结果与一个或多个参考翻译。</p>
-<p>Transform模型中：<br />
-Token Embedding+Position Embedding<br />
-每次将 input 序列都将经过这两层Embedding<br />
-Token Embedding：每一行都是一个word embedding，a list of number<br />
-Position Embedding： 当前位置和其他位置 ，进行sin or cos
-的结果，整个序列形成一个矩阵。</p>
-<p>Pre-training：通用数据训练出来的模型</p>
-<p>Instruction tuning: 明确的问题及明确的答案。特指利用 pairs of
-input-output instructions
-调优模型。目的：遵循自然语言指令，显著提高其在一系列任务中的有用性和适用性。也是一种Fine-Tune。</p>
-<p>PEFT：仅微调少量 (注入额外的) 模型参数，同时冻结预训练 LLM
-的大部分参数。目的：减少全参优化造成的资源消耗。本次实操过程属于PEFT。简要说一下在哪里注入参数：
-在各个神经网络层，GPT3.5有96层，那么就在每一层，添加参数。</p>
-<p>PEFT： * prompt-tuning
-用新初始化的embedding，加入到数据集中，修改输入序列。在输入层修改。 *
-prefix-tuning 在神经单元网络中，每个隐层添加参数。 * LoRA
-训练低秩矩阵(AXB),添加到W(Q)、 W(V)上。<br />
-* QLoRA 用模型量化，减少了参数的精度。</p>
-<p>GPT-3 模型由两个组件组成： The Model Body and the Head.<br />
-LLM Head ：可能是一个线性层，用 softmax
-函数激活，为词汇表中的每个单词生成概率。</p>
-<h3 id="云gpu服务器资源">云GPU服务器资源</h3>
-<p>NVIDIA 显卡上的几种类型的核心：<br />
-* CUDA 核心：最通用的核心，适用于各种计算任务。 *
-张量核心：针对某些机器学习计算进行了优化 * 光线追踪 (RT)
-核心：对于游戏来说比大多数机器学习更重要，这些核心专门用于模拟光的行为。</p>
-<p>VRAM:是显卡上的内存量</p>
-<p>125 teraflops = 125万亿次浮点运算<br />
-万亿次浮点运算是指处理器每秒计算一兆个浮点运算的能力。例如，说某个东西有“6
-TFLOPS”，意味着它的处理器设置平均每秒可以处理6万亿个浮点计算。</p>
-<h4 id="显卡介绍">显卡介绍：</h4>
-<p>NVIDIA Tesla T4 是一款中端数据中心 GPU。它于2019年发布。 * CUDA
-核心：2560 * 张量核心：320 * 显存：16GiB
-规格页面；https://www.nvidia.com/en-us/data-center/tesla-t4/</p>
-<p>A10 是比 T4 更大、更强大的 GPU，于 2021 年发布，采用 NVIDIA 的 Ampere
-架构。 * CUDA 核心：9216 * 张量核心：288 * 显存：24 GiB</p>
-<h4 id="腾讯云">腾讯云</h4>
-<p>选择实例： PNV4.7XLARGE116</p>
+            <p>了解一些训练过程中必备的知识点<br>买一个公有云GPU服务器，了解训练过程</p>
+<h3 id="回顾基础知识"><a href="#回顾基础知识" class="headerlink" title="回顾基础知识"></a>回顾基础知识</h3><p>模型量化、计算机计算精度：<br>FP32 使用32位存储一个数字<br>FP16 16bit存一个数字。其中1位为符号，5位为指数，10位为尾数。<br>INT8是 FP32的量化版本，其中浮点数用8位整数近似。（还是有计算过程的，不是随便舍弃，INT8可以反向推导出FP32）  </p>
+<p>n-gram:<br>统计语言模型，用于预测下一个词的概率。<br>利用机率大小來判断句子合不合理  </p>
+<p>n是切词的个数。比如<br>n=2,  叫 bigram。”I love learning about deep learning.”。这句话的bigrams将包括：”I love”，”love learning”<br>n=3，叫trigram  </p>
+<p>SLOT和BLEU的指标:<br>槽填充（Slot Filling）: 我从上海飞往北京。上海和北京是slot value。slot是离开城市和抵达城市<br>BLEU：精确匹配n-grams来测量句子相似度。机器翻译的结果与一个或多个参考翻译。  </p>
+<p>Transform模型中：<br>Token Embedding+Position Embedding<br>每次将 input 序列都将经过这两层Embedding<br>Token Embedding：每一行都是一个word embedding，a list of number<br>Position Embedding： 当前位置和其他位置 ，进行sin or cos 的结果，整个序列形成一个矩阵。  </p>
+<p>Pre-training：通用数据训练出来的模型  </p>
+<p>Instruction tuning:  明确的问题及明确的答案。特指利用 pairs of input-output instructions 调优模型。目的：遵循自然语言指令，显著提高其在一系列任务中的有用性和适用性。也是一种Fine-Tune。  </p>
+<p>PEFT：仅微调少量 (注入额外的) 模型参数，同时冻结预训练 LLM 的大部分参数。目的：减少全参优化造成的资源消耗。本次实操过程属于PEFT。简要说一下在哪里注入参数： 在各个神经网络层，GPT3.5有96层，那么就在每一层，添加参数。  </p>
+<p>PEFT：</p>
 <ul>
-<li><p>自动安装或者手动安装驱动</p></li>
-<li><p>手动安装 Tesla Driver + CUDA<br />
-下载 NVIDIA Tesla驱动<br />
-https://cloud.tencent.com/document/product/560/8048</p></li>
-<li><p>安装python3.9<br />
-</p></li>
-<li><p>安装pip3.9<br />
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</span><br><span class="line">python3.9 get-pip.py</span><br></pre></td></tr></table></figure></p></li>
-<li><p>安装git-lfs <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git-lfs !git lfs install</span><br></pre></td></tr></table></figure></p></li>
+<li>prompt-tuning  用新初始化的embedding，加入到数据集中，修改输入序列。在输入层修改。</li>
+<li>prefix-tuning  在神经单元网络中，每个隐层添加参数。</li>
+<li>LoRA 训练低秩矩阵(AXB),添加到W(Q)、 W(V)上。  </li>
+<li>QLoRA 用模型量化，减少了参数的精度。  </li>
 </ul>
-<h3 id="下载model">下载Model</h3>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git lfs install</span><br><span class="line">GIT_LFS_SKIP_SMUDGE=1 git clone https://www.modelscope.cn/ZhipuAI/chatglm3-6b.git</span><br><span class="line">cd chatglm3-6b</span><br><span class="line">git lfs fetch --include=&quot;tokenizer.model&quot;</span><br><span class="line">git lfs checkout tokenizer.model</span><br><span class="line">git lfs fetch --include=&quot;*.safetensors&quot;</span><br><span class="line">git lfs checkout *.safetensors</span><br></pre></td></tr></table></figure>
-<h3 id="了解数据集">了解数据集</h3>
-<h4 id="chatglm3-6b的对话格式">chatglm3-6b的对话格式</h4>
-<p>-&lt;|system|&gt; 提示器<br />
--&lt;|user|&gt; 输入<br />
--&lt;|assistant|&gt; 模型回复<br />
--&lt;|observation|&gt; 工具调用、代码执行的结果</p>
-<p>多轮对话的json格式表示,按照以下格式准备：训练数据集和验证数据集
-train.json 和 dev.json文件<br />
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="attr">&quot;webTool:根据衣服查找哪个网站便宜\nParameters: &#123;\&quot;name&quot;</span><span class="punctuation">:</span>\<span class="string">&quot;衣服名称\&quot;,\&quot;price\&quot;:\&quot;衣服售价&quot;</span><span class="punctuation">&#125;</span>\nOutput<span class="punctuation">:</span>A url string that can tell user where is the cloth is on-sale<span class="string">&quot;</span></span><br><span class="line"><span class="string">    ],</span></span><br><span class="line"><span class="string">    &quot;</span>conversations<span class="string">&quot;: [</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>user<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>类型#上衣*材质#牛仔布*颜色#白色*风格#简约*图案#刺绣*衣样式#外套*衣款式#破洞<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>assistant<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>简约而不简单的牛仔外套，白色的衣身十分百搭。<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>user<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>在哪买<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>tool<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>name<span class="string">&quot;: &quot;</span>search_hotels<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>parameters<span class="string">&quot;: &#123;</span></span><br><span class="line"><span class="string">          &quot;</span>name<span class="string">&quot;: &quot;</span>牛仔外套<span class="string">&quot;,</span></span><br><span class="line"><span class="string">          &quot;</span>price<span class="string">&quot;: 300</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        &quot;</span>observation<span class="string">&quot;: [</span></span><br><span class="line"><span class="string">          &#123;</span></span><br><span class="line"><span class="string">            &quot;</span>website<span class="string">&quot;: &quot;</span>https<span class="punctuation">:</span><span class="comment">//example.com&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure> ChatGLM3-6b原生支持function call<br />
-tools :表示function和parameters的定义<br />
-conversations： 表示多轮对话<br />
-user 和 assistant ： 分别是用户和AI的问答。<br />
-角色带loss字段。没写默认对 system, user 不计算 loss，其余角色则计算
-loss。</p>
-<h3 id="下载数据集">下载数据集</h3>
-<p>这里参照 <a
-target="_blank" rel="noopener" href="https://github.com/THUDM/ChatGLM3/blob/main/finetune_demo/lora_finetune.ipynb">github</a>
-操作即可</p>
-<h3 id="在单卡上运行">在单卡上运行</h3>
-<p>用官方的代码,花了5个小时<br />
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd finetune_demo</span><br><span class="line">python finetune_hf.py  data/AdvertiseGen/  THUDM/chatglm3-6b  configs/lora.yaml</span><br></pre></td></tr></table></figure></p>
-<p>生成如下内容,使用新模型，加载最新的目录即可。大小在几百兆。我的理解是lora训练的新参数，依赖于原始的Model（12G）文件（别删了）。
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:33 test_lora-20240301-153316</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:37 test_lora-20240301-153719</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:49 test_lora-20240301-154939</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 16:09 test_lora-20240301-160948</span><br><span class="line">drwxr-xr-x 13 root root 4096 Mar  1 21:47 test_lora-20240301-161128</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>GPT-3 模型由两个组件组成： The Model Body and the Head.<br>LLM Head ：可能是一个线性层，用 softmax 函数激活，为词汇表中的每个单词生成概率。  </p>
+<h3 id="云GPU服务器资源"><a href="#云GPU服务器资源" class="headerlink" title="云GPU服务器资源"></a>云GPU服务器资源</h3><p>NVIDIA 显卡上的几种类型的核心：  </p>
+<ul>
+<li>CUDA 核心：最通用的核心，适用于各种计算任务。</li>
+<li>张量核心：针对某些机器学习计算进行了优化</li>
+<li>光线追踪 (RT) 核心：对于游戏来说比大多数机器学习更重要，这些核心专门用于模拟光的行为。  </li>
+</ul>
+<p>VRAM:是显卡上的内存量  </p>
+<p>125 teraflops  = 125万亿次浮点运算<br>万亿次浮点运算是指处理器每秒计算一兆个浮点运算的能力。例如，说某个东西有“6 TFLOPS”，意味着它的处理器设置平均每秒可以处理6万亿个浮点计算。</p>
+<h4 id="显卡介绍："><a href="#显卡介绍：" class="headerlink" title="显卡介绍："></a>显卡介绍：</h4><p>NVIDIA Tesla T4 是一款中端数据中心 GPU。它于2019年发布。</p>
+<ul>
+<li>CUDA 核心：2560</li>
+<li>张量核心：320</li>
+<li>显存：16GiB<br>规格页面；<a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/data-center/tesla-t4/">https://www.nvidia.com/en-us/data-center/tesla-t4/</a></li>
+</ul>
+<p>A10 是比 T4 更大、更强大的 GPU，于 2021 年发布，采用 NVIDIA 的 Ampere 架构。</p>
+<ul>
+<li>CUDA 核心：9216</li>
+<li>张量核心：288</li>
+<li>显存：24 GiB</li>
+</ul>
+<h4 id="腾讯云"><a href="#腾讯云" class="headerlink" title="腾讯云"></a>腾讯云</h4><p>选择实例： PNV4.7XLARGE116</p>
+<ul>
+<li>自动安装或者手动安装驱动</li>
+<li>手动安装 Tesla Driver + CUDA<br>下载 NVIDIA Tesla驱动<br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/560/8048">https://cloud.tencent.com/document/product/560/8048</a>  </li>
+</ul>
+<ul>
+<li>安装python3.9  </li>
+<li>安装pip3.9  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</span><br><span class="line">python3.9 get-pip.py</span><br></pre></td></tr></table></figure></li>
+<li>安装git-lfs<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install git-lfs !git lfs install</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="下载Model"><a href="#下载Model" class="headerlink" title="下载Model"></a>下载Model</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git lfs install</span><br><span class="line">GIT_LFS_SKIP_SMUDGE=1 git clone https://www.modelscope.cn/ZhipuAI/chatglm3-6b.git</span><br><span class="line">cd chatglm3-6b</span><br><span class="line">git lfs fetch --include=&quot;tokenizer.model&quot;</span><br><span class="line">git lfs checkout tokenizer.model</span><br><span class="line">git lfs fetch --include=&quot;*.safetensors&quot;</span><br><span class="line">git lfs checkout *.safetensors</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="了解数据集"><a href="#了解数据集" class="headerlink" title="了解数据集"></a>了解数据集</h3><h4 id="chatglm3-6b的对话格式"><a href="#chatglm3-6b的对话格式" class="headerlink" title="chatglm3-6b的对话格式"></a>chatglm3-6b的对话格式</h4><p>-&lt;|system|&gt; 提示器<br>-&lt;|user|&gt; 输入<br>-&lt;|assistant|&gt;  模型回复<br>-&lt;|observation|&gt; 工具调用、代码执行的结果  </p>
+<p>多轮对话的json格式表示,按照以下格式准备：训练数据集和验证数据集 train.json 和 dev.json文件  </p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="attr">&quot;webTool:根据衣服查找哪个网站便宜\nParameters: &#123;\&quot;name&quot;</span><span class="punctuation">:</span>\<span class="string">&quot;衣服名称\&quot;,\&quot;price\&quot;:\&quot;衣服售价&quot;</span><span class="punctuation">&#125;</span>\nOutput<span class="punctuation">:</span>A url string that can tell user where is the cloth is on-sale<span class="string">&quot;</span></span><br><span class="line"><span class="string">    ],</span></span><br><span class="line"><span class="string">    &quot;</span>conversations<span class="string">&quot;: [</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>user<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>类型#上衣*材质#牛仔布*颜色#白色*风格#简约*图案#刺绣*衣样式#外套*衣款式#破洞<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>assistant<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>简约而不简单的牛仔外套，白色的衣身十分百搭。<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>user<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>content<span class="string">&quot;: &quot;</span>在哪买<span class="string">&quot;</span></span><br><span class="line"><span class="string">      &#125;,</span></span><br><span class="line"><span class="string">      &#123;</span></span><br><span class="line"><span class="string">        &quot;</span>role<span class="string">&quot;: &quot;</span>tool<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>name<span class="string">&quot;: &quot;</span>search_hotels<span class="string">&quot;,</span></span><br><span class="line"><span class="string">        &quot;</span>parameters<span class="string">&quot;: &#123;</span></span><br><span class="line"><span class="string">          &quot;</span>name<span class="string">&quot;: &quot;</span>牛仔外套<span class="string">&quot;,</span></span><br><span class="line"><span class="string">          &quot;</span>price<span class="string">&quot;: 300</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        &quot;</span>observation<span class="string">&quot;: [</span></span><br><span class="line"><span class="string">          &#123;</span></span><br><span class="line"><span class="string">            &quot;</span>website<span class="string">&quot;: &quot;</span>https<span class="punctuation">:</span><span class="comment">//example.com&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>ChatGLM3-6b原生支持function call<br>tools :表示function和parameters的定义<br>conversations： 表示多轮对话<br>user 和 assistant ： 分别是用户和AI的问答。<br>角色带loss字段。没写默认对 system, user 不计算 loss，其余角色则计算 loss。  </p>
+<h3 id="下载数据集"><a href="#下载数据集" class="headerlink" title="下载数据集"></a>下载数据集</h3><p>这里参照 <a target="_blank" rel="noopener" href="https://github.com/THUDM/ChatGLM3/blob/main/finetune_demo/lora_finetune.ipynb">github</a> 操作即可</p>
+<h3 id="在单卡上运行"><a href="#在单卡上运行" class="headerlink" title="在单卡上运行"></a>在单卡上运行</h3><p>用官方的代码,花了5个小时  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd finetune_demo</span><br><span class="line">python finetune_hf.py  data/AdvertiseGen/  THUDM/chatglm3-6b  configs/lora.yaml</span><br></pre></td></tr></table></figure>
+
+<p>生成如下内容,使用新模型，加载最新的目录即可。大小在几百兆。我的理解是lora训练的新参数，依赖于原始的Model（12G）文件（别删了）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:33 test_lora-20240301-153316</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:37 test_lora-20240301-153719</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 15:49 test_lora-20240301-154939</span><br><span class="line">drwxr-xr-x  3 root root 4096 Mar  1 16:09 test_lora-20240301-160948</span><br><span class="line">drwxr-xr-x 13 root root 4096 Mar  1 21:47 test_lora-20240301-161128</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
 
         </div>
         <footer class="article-footer">
@@ -280,7 +251,7 @@ target="_blank" rel="noopener" href="https://github.com/THUDM/ChatGLM3/blob/main
 
 
 
-    <a data-url="http://yoursite.com/2024/02/20/fine_tune_part1/" data-id="cm69b0788000hzgqe5d8jcp6m" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2024/02/20/fine_tune_part1/" data-id="cm69ca098000hybp535qjdjyy" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
